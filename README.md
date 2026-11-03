@@ -67,6 +67,22 @@ git clone https://github.com/LWWalker2202/econ-research-kit-zh.git \
   ~/.claude/skills/econ-research-kit-zh
 ```
 
+**DSH（DeepSeek Harness）**
+
+DSH 读两个技能目录，一个是多个 agent 共用的，一个是它自己的：
+
+```bash
+# 共用目录，推荐
+git clone https://github.com/LWWalker2202/econ-research-kit-zh.git \
+  ~/.agents/skills/econ-research-kit-zh
+
+# 或只给 DSH 用
+git clone https://github.com/LWWalker2202/econ-research-kit-zh.git \
+  ~/.dsh/skills/econ-research-kit-zh
+```
+
+Windows 下这两个目录是 `%USERPROFILE%\.agents\skills\` 与 `%USERPROFILE%\.dsh\skills\`。一个技能就是一个含 `SKILL.md` 的目录，不需要另外注册；DSH 已经在跑的话，开一个新会话让它重新读技能列表。
+
 重启 agent。验证是否加载：问一句「econ-research-kit 里 feasibility 这道工序判断什么」。答不上来就是没加载上。
 
 没有构建步骤，除 `scripts/` 里的脚本需要 Python 3.9+ 之外没有依赖。
