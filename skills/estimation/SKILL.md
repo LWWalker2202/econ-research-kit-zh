@@ -27,7 +27,7 @@ description: 估计一个已经冻结的设定并为它辩护——给固定效�
 
 ## 步骤
 
-1. 按冻结的设定重建基准回归，并按事先指定的层级报告系数与聚类标准误。完成条件：表格与备忘录里的设定逐变量对得上。
+1. 按冻结的设定重建基准回归，并按事先指定的层级报告系数与聚类标准误。完成条件：表格与备忘录里的设定逐变量对得上。可直接照抄的参考实现在 `templates/estimate_main.py`，Stata 对照实现是 `templates/estimate_main.do`，钉住的金样报告在 `expected/estimation-results.md` 与 `expected/estimation-results.json`：在仓库根目录跑 `python skills/estimation/templates/estimate_main.py --lang zh`，先把 `output/estimation-results.md` 与金样逐行比对、`output/estimation-results.json` 与金样逐字节比对，再改脚本。
 2. 给固定效应说理由。每一组都写出它吸收掉哪部分变异、又留下哪部分变异。完成条件：没有任何一组固定效应是因为"惯例如此"才留在里面的。
 3. 给聚类层级说理由。写明处理变量在哪一层被指派、误差在哪一层相关，再报告一种替代聚类作为检验。完成条件：备忘录里的聚类句与命令文件用的是同一个层级。
 4. 只跑挂得上威胁清单的稳健性检验，其余一律放进附录并各写一行理由。完成条件：正文里的每条检验都在表注里点名了它在防的威胁。
@@ -78,3 +78,4 @@ description: 估计一个已经冻结的设定并为它辩护——给固定效�
 - `domains/labor/pitfalls.md`：工资与劳动流动类估计出来之后会挨的质疑。
 - `domains/behavioral/pitfalls.md`：解释结果之前，操纵检验与平衡性检验各自必须显示什么。
 - `data-dict/`：会改变系数读法的测量注意事项。
+- `overrides/identification-reporting-cn.md`：中文刊对因果结果的报告惯例——表里该有哪些行、事件研究基期怎么选、预趋势是画图还是列表、稳健性检验放在正文还是附录。

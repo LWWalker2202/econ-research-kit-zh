@@ -2,7 +2,7 @@
 
 面向实证经济学的可执行工序库。八道工序，每道都有输入、产出文件与验收标准。
 
-**版本 0.1.0** · 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 校验
+**版本 0.1.1** · 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 校验
 
 ---
 
@@ -175,7 +175,7 @@ vendor 进来的是代码与 LaTeX 模板，语言中立，因此在两个语言
 
 ## 状态
 
-版本 0.1.0。八道工序、三个方向、四份数据字典、三档教学读法。vendor 分两批完成：图形方案、提示词规范、三套经管期刊表图 skill 目录、LaTeX 表片段，许可证记在 `skills/*/vendor/` 下。中文镜像已对齐。
+版本 0.1.1。八道工序、三个方向、四份数据字典、三档教学读法。三道工序已能跑、带金样可比对：`data-prep`、`estimation`、`tables-figures`。vendor 分两批完成：图形方案、提示词规范、三套经管期刊表图 skill 目录、LaTeX 表片段，许可证记在 `skills/*/vendor/` 下。中文刊的报告惯例（28 篇实测）记在 `skills/*/overrides/` 下。中文镜像已对齐。
 
 ## 许可证
 

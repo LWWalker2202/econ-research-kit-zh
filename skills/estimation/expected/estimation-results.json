@@ -1,0 +1,213 @@
+{
+  "panel": {
+    "seed": 20260315,
+    "n_individuals": 60,
+    "first_year": 2010,
+    "last_year": 2019,
+    "n_obs": 600,
+    "cohorts": [
+      {
+        "cohort_year": 2014,
+        "n_individuals": 20
+      },
+      {
+        "cohort_year": 2016,
+        "n_individuals": 20
+      }
+    ],
+    "never_treated": 20,
+    "treated_cells": 200,
+    "treated_share": 0.333333
+  },
+  "specifications": [
+    {
+      "id": "m1",
+      "formula": "y ~ D | id + year",
+      "vcov": "iid",
+      "n_obs": 600,
+      "r2": 0.481798,
+      "fixef": [
+        "id",
+        "year"
+      ],
+      "coefficients": [
+        {
+          "term": "D",
+          "coef": 0.415341,
+          "se": 0.158458,
+          "t": 2.621138,
+          "p": 0.009015
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "formula": "y ~ D + x1 + x2 | id + year",
+      "vcov": "iid",
+      "n_obs": 600,
+      "r2": 0.529226,
+      "fixef": [
+        "id",
+        "year"
+      ],
+      "coefficients": [
+        {
+          "term": "D",
+          "coef": 0.351806,
+          "se": 0.151647,
+          "t": 2.319901,
+          "p": 0.020727
+        },
+        {
+          "term": "x1",
+          "coef": 0.204427,
+          "se": 0.044555,
+          "t": 4.588181,
+          "p": 6e-06
+        },
+        {
+          "term": "x2",
+          "coef": -0.234744,
+          "se": 0.042011,
+          "t": -5.587695,
+          "p": 0.0
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "formula": "y ~ D + x1 + x2 | id + year",
+      "vcov": "cluster_id",
+      "n_obs": 600,
+      "r2": 0.529226,
+      "fixef": [
+        "id",
+        "year"
+      ],
+      "coefficients": [
+        {
+          "term": "D",
+          "coef": 0.351806,
+          "se": 0.143102,
+          "t": 2.45844,
+          "p": 0.016909
+        },
+        {
+          "term": "x1",
+          "coef": 0.204427,
+          "se": 0.049317,
+          "t": 4.145149,
+          "p": 0.00011
+        },
+        {
+          "term": "x2",
+          "coef": -0.234744,
+          "se": 0.043329,
+          "t": -5.417656,
+          "p": 1e-06
+        }
+      ]
+    }
+  ],
+  "event_study": {
+    "formula": "y ~ rel_le_m3 + rel_m2 + rel_p0 + rel_p1 + rel_p2 + rel_ge_p3 + x1 + x2 | id + year",
+    "base_period": -1,
+    "window": [
+      -2,
+      2
+    ],
+    "vcov": "cluster_id",
+    "n_obs": 600,
+    "r2": 0.529672,
+    "fixef": [
+      "id",
+      "year"
+    ],
+    "coefficients": [
+      {
+        "term": "rel_le_m3",
+        "coef": 0.066645,
+        "se": 0.196371,
+        "t": 0.339381,
+        "p": 0.735528
+      },
+      {
+        "term": "rel_m2",
+        "coef": 0.061324,
+        "se": 0.256607,
+        "t": 0.238981,
+        "p": 0.811949
+      },
+      {
+        "term": "rel_p0",
+        "coef": 0.49084,
+        "se": 0.270588,
+        "t": 1.813971,
+        "p": 0.074768
+      },
+      {
+        "term": "rel_p1",
+        "coef": 0.363404,
+        "se": 0.271489,
+        "t": 1.338557,
+        "p": 0.18585
+      },
+      {
+        "term": "rel_p2",
+        "coef": 0.340225,
+        "se": 0.260067,
+        "t": 1.308223,
+        "p": 0.195872
+      },
+      {
+        "term": "rel_ge_p3",
+        "coef": 0.343917,
+        "se": 0.258068,
+        "t": 1.33266,
+        "p": 0.187767
+      }
+    ]
+  },
+  "robustness": {
+    "formula": "y ~ D + x1 + x2 | id + year",
+    "coefficient": "D",
+    "levels": [
+      {
+        "term": "D",
+        "coef": 0.351806,
+        "se": 0.151647,
+        "t": 2.319901,
+        "p": 0.020727,
+        "vcov": "iid",
+        "n_clusters": null
+      },
+      {
+        "term": "D",
+        "coef": 0.351806,
+        "se": 0.143102,
+        "t": 2.45844,
+        "p": 0.016909,
+        "vcov": "cluster_id",
+        "n_clusters": 60
+      },
+      {
+        "term": "D",
+        "coef": 0.351806,
+        "se": 0.156145,
+        "t": 2.253083,
+        "p": 0.040816,
+        "vcov": "cluster_block",
+        "n_clusters": 15
+      },
+      {
+        "term": "D",
+        "coef": 0.351806,
+        "se": 0.100442,
+        "t": 3.502582,
+        "p": 0.006696,
+        "vcov": "cluster_year",
+        "n_clusters": 10
+      }
+    ]
+  }
+}
