@@ -2,7 +2,7 @@
 
 面向实证经济学的工作台：**八道工序、十二个领域**，每一道工序要么有能跑的模板加金样可供比对，要么有一个读你产出的检查器。
 
-**版本 0.3.0** · 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 校验
+**版本 0.3.1** · 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 校验
 
 ## 为什么要做这个
 
@@ -158,6 +158,6 @@ Windows 上同样这几个位置是 `%USERPROFILE%\.codex\skills\`、`%USERPROFI
 
 ## 状态与许可
 
-版本 0.3.0。八道工序、十二个领域包、四份数据字典、三档教学读法、十二个 vendor 上游、两套从真实期刊实测出来的规范，以及每一道工序都能跑的产出或检查器。
+版本 0.3.1。八道工序、十二个领域包、四份数据字典、三档教学读法、十二个 vendor 上游、两套从真实期刊实测出来的规范，以及每一道工序都能跑的产出或检查器。
 
-库本身是 MIT 许可。vendor 进来的材料各自保留自己的许可证，许可证、NOTICE 与 commit 记在它旁边的 `LICENSES.md` 里。配套用书是工作讲义，供参考与教学使用，作者 LW Walker 以及朋友们、家人们。
+库本身是 MIT 许可：Copyright (c) 2026 LW Walker, with dear friends and lovely family。vendor 进来的材料各自保留自己的许可证，许可证、NOTICE 与 commit 记在它旁边的 `LICENSES.md` 里。配套用书是工作讲义，供参考与教学使用，署名同上。
