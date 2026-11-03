@@ -1,0 +1,10 @@
+check_abstract — lang=en, file=skills/writing/expected/abstract.md
+[OK] 1/7 字数区间: 125 个英文词（区间 100 到 150）
+[OK] 2/7 识别策略或方法: difference-in-differences
+[OK] 3/7 量化结果: [待核实] percentage points（占位，提交前填实际数值）
+[OK] 4/7 自称方式: this paper
+[OK] 5/7 第一人称: 没有第一人称
+[OK] 6/7 关键词个数: 4 个关键词（要求 3 到 5 个）
+[OK] 7/7 分类号: R41、J24、O18
+note: 1 处占位符待填，提交前必须替换
+7/7 checks passed

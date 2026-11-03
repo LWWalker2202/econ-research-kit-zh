@@ -1,0 +1,7 @@
+check_response — lang=en, file=skills/review/expected/response-letter.md
+[OK] 1/5 意见与回应成对: 4 条意见，4 条回应
+[OK] 2/5 回应指明改在何处: 4/4 条回应给出页码、节或表图号
+[OK] 3/5 至少一条不改并说明理由: 1 条属拒绝或部分接受
+[OK] 4/5 无情绪化措辞: 没有贬低审稿人的措辞
+[OK] 5/5 有总述段: 第一条意见前有 111 个英文词
+5/5 checks passed

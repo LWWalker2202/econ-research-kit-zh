@@ -45,6 +45,8 @@ description: 把一个研究问题变成可执行的识别设计——定义处�
 | `pre-registration-draft.md` | 主设定、样本规则、稳健性预案、开始分析日期 | 注册平台、期刊或资助方 |
 | `specification-table.tex` | 主方程，加上固定效应与控制变量的清单及各自用掉的变异 | 论文的实证策略一节 |
 
+- 可跑检查与金样：`templates/check_design.py` 逐项检查设计备忘录是否写全上述六项，`expected/identification-memo.md` 是填好的样例，`expected/check-report.txt` 是钉住的真实输出；在仓库根目录跑 `python skills/identification/templates/check_design.py skills/identification/expected/identification-memo.md`，再把输出与金样逐行比对。
+
 ## 验收
 
 - [ ] 处理变量与对照组是按码本定义的，不是按匹配后剩下的样本定义的。

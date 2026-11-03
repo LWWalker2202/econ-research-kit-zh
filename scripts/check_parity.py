@@ -188,7 +188,9 @@ def main() -> int:
             if sha(files_en[path]) != sha(files_zh[path]):
                 problems.append(f"not byte-identical: {path}")
     for path in common:
-        if path.startswith("scripts/"):
+        # scripts/ and the book PDFs are language-neutral: they must match byte for byte.
+        # book/README.md is language-specific, so it is compared as markdown like the rest.
+        if path.startswith("scripts/") or (path.startswith("book/") and path.endswith(".pdf")):
             if sha(files_en[path]) != sha(files_zh[path]):
                 problems.append(f"not byte-identical: {path}")
 

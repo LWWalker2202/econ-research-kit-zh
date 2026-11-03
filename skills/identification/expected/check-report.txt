@@ -1,0 +1,9 @@
+Identification design check
+memo: identification-memo.md
+[OK] 1 Treatment and control are defined: both groups defined in one section
+[OK] 2 At least three threats, each with a test: 4 threats, 4 carry a test
+[OK] 3 Each threat states what would falsify the design: 4 of 4 threats state a falsifying result
+[OK] 4 Clustering level and the reason for it: level and reason stated
+[OK] 5 Source of variation stated in one sentence: variation sentence found
+[OK] 6 Binding assumption named: binding assumption named
+6/6 checks passed

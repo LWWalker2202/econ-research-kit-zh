@@ -46,6 +46,8 @@ description: 把决定信与两份审稿意见拆开处理：把每条意见分�
 | `review/revision_log.md` | 逐条修改记录，含节、页、行 | 通讯作者 |
 | `manuscript/manuscript_v2.tex` | 修订稿，标注改动痕迹 | 投稿系统 |
 
+- 回复信定稿前跑 `skills/review/templates/check_response.py`；金样输出见 `skills/review/expected/check-report.txt`。
+
 ## 验收
 
 - [ ] `review/comments.csv` 一条意见段落一行，行数与手工清点两份意见的结果一致。

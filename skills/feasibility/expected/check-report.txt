@@ -1,0 +1,11 @@
+Feasibility memo completeness check
+memo: skills\feasibility\expected\feasibility-memo.md
+
+[1] four slots filled (unit, treatment variable, outcome, comparison)  OK
+[2] coverage matrix marks present, proxy, and missing                  OK
+[3] at least three stop criteria, each with a numeric threshold        OK
+[4] verdict is one of go, go with reduced scope, stop                  OK
+[5] binding constraint is named                                        OK
+[6] every dataset has an access route and a lead time in weeks         OK
+
+6/6 checks passed

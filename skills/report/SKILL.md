@@ -51,6 +51,8 @@ description: 搭一条可复现的报告流水线：从原始数据到中间产�
 | `manifests/provenance.json` | 数据快照、代码提交、软件环境 | 编辑，审稿人 |
 | `build/build.log` | 最近一次完整构建的时间戳日志 | 排错 |
 
+- 可跑的模板与金样：`skills/report/templates/build_report.py` 从一个冻结的表格文件与一个冻结的估计文件生成报告，`skills/report/templates/README.md` 写明输入输出契约，`skills/report/expected/report.md` 是生成器在金样输入上的实际输出。
+
 ## 验收
 
 - [ ] 从干净检出出发，一条命令重建中间数据、表、图与两份报告，无手工步骤。

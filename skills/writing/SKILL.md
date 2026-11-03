@@ -48,6 +48,8 @@ description: 写并按中文期刊体例投出一篇经济学论文：200 到 30
 | `review/response_letter.md` | 逐条回复，含照引意见与修改位置 | 编辑与审稿人 |
 | `submission/checklist.md` | 投稿系统要求逐项与完成状态 | 通讯作者 |
 
+- 摘要定稿前跑 `skills/writing/templates/check_abstract.py`；金样输出见 `skills/writing/expected/check-report.txt`。
+
 ## 验收
 
 - [ ] 摘要落在刊物规定字数内（默认 200 到 300 字），且不含引用。

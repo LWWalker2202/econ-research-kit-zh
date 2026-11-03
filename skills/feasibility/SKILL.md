@@ -44,6 +44,8 @@ description: 在写任何代码之前判断一个实证研究题目能不能做�
 | `data-access-plan.md` | 数据集、获取渠道、申请周期、负责人、备选来源 | 负责提交数据申请的人 |
 | `stop-criteria.md` | 事先承诺的阈值与决策规则，附复盘日期 | 后续环节卡住时打开，用来决定是否放弃 |
 
+- `templates/check_memo.py` 对填好的备忘录做六项机检（四槽位、覆盖类别、止损阈值、结论、约束瓶颈、获取周期），中英文均可；`expected/feasibility-memo.md` 是一份填好的样例，`expected/check-report.txt` 是它跑出来的报告。
+
 ## 验收
 
 - [ ] 题目是一句话，且点明了分析单位、处理变量、结果变量、对照组。
