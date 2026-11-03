@@ -71,6 +71,15 @@ description: 经济学实证研究的动作库——把一次研究拆成八道�
 | 能源与环境经济学 | `domains/energy-env/` |
 | 劳动经济学 | `domains/labor/` |
 | 行为与实验经济学 | `domains/behavioral/` |
+| 发展经济学与田野实验 | `domains/development/` |
+| 公共经济学与政策评估 | `domains/public/` |
+| 产业组织与规制 | `domains/industrial-organization/` |
+| 国际贸易与空间经济 | `domains/trade-spatial/` |
+| 宏观经济学与金融 | `domains/macro-finance/` |
+| 经济史与史料 | `domains/economic-history/` |
+| 理论建模与机制设计 | `domains/theory/` |
+
+共十个方向。前三个是本库最初围绕的，后面七个是为了让不做微观实证的人也能找到自己的那一格。
 
 每个方向四个文件：`institutional.md`（制度背景与可直接引用的段落）、`measures.md`（处理变量怎么构造）、`data.md`（数据来源与变量名）、`pitfalls.md`（审稿人问什么、怎么答）。
 
