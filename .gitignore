@@ -27,5 +27,9 @@ cache/
 *.rds
 *.h5
 
-# Local overrides that are not part of the kit
-skills/*/vendor/*/     
+# Local scratch that is not part of the kit.
+# Note: skills/*/vendor/ IS committed on purpose. Vendored code is copied in
+# byte-for-byte and recorded in LICENSES.md, so it must live in the repo.
+local/
+*.log
+
