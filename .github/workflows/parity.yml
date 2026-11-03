@@ -4,8 +4,11 @@ name: parity
 # the same section structure, the same acceptance counts, and the same
 # byte-identical shared files.
 #
-# Setup: add a repository variable MIRROR_REPO = <owner>/<the-other-repo>
-# (Settings -> Secrets and variables -> Actions -> Variables).
+# No setup needed: the mirror is derived from this repository's name
+# (econ-research-kit <-> econ-research-kit-zh) and both are public.
+# Override with a repository variable MIRROR_REPO = <owner>/<repo>
+# (Settings -> Secrets and variables -> Actions -> Variables) if you
+# renamed the pair or work from a fork.
 
 on:
   push:
@@ -14,38 +17,38 @@ on:
     - cron: "0 3 * * 1"
   workflow_dispatch:
 
-env:
-  MIRROR_REPO: ${{ vars.MIRROR_REPO }}
-
 jobs:
   parity:
     runs-on: ubuntu-latest
     steps:
-      - name: Check mirror variable
+      - name: Resolve mirror repository
         run: |
-          if [ -z "$MIRROR_REPO" ]; then
-            echo "MIRROR_REPO is not set; skipping parity."
-            echo "skip=true" >> "$GITHUB_ENV"
+          mirror="${{ vars.MIRROR_REPO }}"
+          if [ -z "$mirror" ]; then
+            owner="${GITHUB_REPOSITORY%%/*}"
+            name="${GITHUB_REPOSITORY##*/}"
+            if [ "$name" = "econ-research-kit-zh" ]; then
+              mirror="$owner/econ-research-kit"
+            else
+              mirror="$owner/econ-research-kit-zh"
+            fi
+            echo "MIRROR_REPO is not set; using $mirror"
           fi
+          echo "MIRROR_REPO=$mirror" >> "$GITHUB_ENV"
 
       - uses: actions/checkout@v4
-        if: env.skip != 'true'
         with:
           path: self
 
-      - uses: actions/checkout@v4
-        if: env.skip != 'true'
-        with:
-          repository: ${{ env.MIRROR_REPO }}
-          path: mirror
+      - name: Clone the mirror
+        run: |
+          git clone --depth 1 "https://github.com/${MIRROR_REPO}.git" mirror
 
       - uses: actions/setup-python@v5
-        if: env.skip != 'true'
         with:
           python-version: "3.11"
 
       - name: Arrange directories by language
-        if: env.skip != 'true'
         run: |
           if [ "${GITHUB_REPOSITORY##*/}" = "econ-research-kit-zh" ]; then
             mv self econ-research-kit-zh
@@ -56,11 +59,9 @@ jobs:
           fi
 
       - name: Run parity check
-        if: env.skip != 'true'
         run: python3 econ-research-kit/scripts/check_parity.py
 
       - name: Check mirror is not stale
-        if: env.skip != 'true'
         run: |
           lag=$(( ( $(date +%s) - $(date -d "$(git -C mirror log -1 --format=%cI)" +%s) ) / 86400 ))
           echo "mirror last commit: $lag day(s) ago"
