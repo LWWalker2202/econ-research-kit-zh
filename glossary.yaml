@@ -1,0 +1,239 @@
+# glossary.yaml — 术语锁定表 / locked terminology
+#
+# 本文件在 econ-research-kit 与 econ-research-kit-zh 两个仓库中必须【逐字节相同】。
+# CI 会比对两个仓库该文件的 sha256，不一致即失败。
+#
+# 三级语义：
+#   locked   —— 已拍板，强制使用，不得改写、不得意译。
+#   pending  —— 未拍板。运行时使用第一个候选，并在其后括注「另一说：X，未定」。
+#               一次输出最多标注 3 处；超出部分静默用第一候选，末尾汇总一行。
+#   fallback —— 英文中无准确对应。保留中文专名，首次出现给英文解释，后文用缩写或中文。
+#
+# 新增术语的流程：
+#   1. 遇到新词或争议译法 → 追加到 pending
+#   2. 每条 pending 必须带 en_candidates（至少 2 个）
+#   3. 攒到 20 条或满一个月 → 一次性拍板 → 移入 locked
+#   4. pending 列表本身就是待办清单，不要空着不管
+#
+version: 1
+
+locked:
+  # ---------- 因果识别 ----------
+  - zh: "识别策略"
+    en: "identification strategy"
+  - zh: "处理变量"
+    en: "treatment variable"
+    note: "不要写成 processed variable / processing variable"
+  - zh: "处理组"
+    en: "treatment group"
+  - zh: "对照组"
+    en: "control group"
+  - zh: "平行趋势"
+    en: "parallel trends"
+    note: "复数；不要写 parallel tendency"
+  - zh: "双重差分"
+    en: "difference-in-differences"
+    note: "括号内缩写 DiD；破折号用连字符，不要写成 double difference"
+  - zh: "事件研究"
+    en: "event study"
+  - zh: "工具变量"
+    en: "instrumental variable"
+    note: "括号内缩写 IV"
+  - zh: "断点回归"
+    en: "regression discontinuity design"
+    note: "括号内缩写 RDD"
+  - zh: "合成控制法"
+    en: "synthetic control method"
+    note: "括号内缩写 SCM"
+  - zh: "安慰剂检验"
+    en: "placebo test"
+  - zh: "稳健性检验"
+    en: "robustness checks"
+  - zh: "内生性"
+    en: "endogeneity"
+  - zh: "外生性"
+    en: "exogeneity"
+  - zh: "遗漏变量"
+    en: "omitted variable"
+  - zh: "选择性偏误"
+    en: "selection bias"
+  - zh: "测量误差"
+    en: "measurement error"
+  - zh: "异质性分析"
+    en: "heterogeneity analysis"
+  - zh: "机制分析"
+    en: "mechanism analysis"
+  - zh: "中介效应"
+    en: "mediation effect"
+  - zh: "调节效应"
+    en: "moderation effect"
+  - zh: "固定效应"
+    en: "fixed effects"
+  - zh: "聚类标准误"
+    en: "clustered standard errors"
+  - zh: "标准误"
+    en: "standard error"
+  - zh: "基准回归"
+    en: "baseline regression"
+  - zh: "边际效应"
+    en: "marginal effect"
+  - zh: "弹性"
+    en: "elasticity"
+  - zh: "半弹性"
+    en: "semi-elasticity"
+  - zh: "描述性统计"
+    en: "descriptive statistics"
+
+  # ---------- 行为与实验 ----------
+  - zh: "统计功效"
+    en: "statistical power"
+  - zh: "最小可检测效应"
+    en: "minimum detectable effect"
+    note: "括号内缩写 MDE"
+  - zh: "预注册"
+    en: "pre-registration"
+  - zh: "操纵检验"
+    en: "manipulation check"
+  - zh: "随机化"
+    en: "randomization"
+  - zh: "平衡性检验"
+    en: "balance check"
+  - zh: "刺激材料"
+    en: "stimulus materials"
+  - zh: "被试"
+    en: "participants"
+    note: "实验经济学用 participants，不用 subjects"
+
+  # ---------- 劳动 ----------
+  - zh: "工资方程"
+    en: "wage equation"
+  - zh: "教育回报"
+    en: "returns to education"
+  - zh: "劳动供给弹性"
+    en: "labor supply elasticity"
+  - zh: "歧视"
+    en: "discrimination"
+  - zh: "个体—企业匹配面板"
+    en: "matched employer-employee panel"
+  - zh: "劳动流动"
+    en: "labor mobility"
+
+  # ---------- 能源与环境 ----------
+  - zh: "环境规制"
+    en: "environmental regulation"
+  - zh: "碳定价"
+    en: "carbon pricing"
+  - zh: "碳泄漏"
+    en: "carbon leakage"
+  - zh: "条件价值法"
+    en: "contingent valuation method"
+    note: "括号内缩写 CVM"
+  - zh: "选择实验"
+    en: "discrete choice experiment"
+  - zh: "支付意愿"
+    en: "willingness to pay"
+    note: "括号内缩写 WTP"
+
+  # ---------- 数据与写作 ----------
+  - zh: "变量口径"
+    en: "variable definition"
+    note: "强调一致时用 consistency of measurement"
+  - zh: "样本选择"
+    en: "sample selection"
+  - zh: "数据清洗"
+    en: "data cleaning"
+  - zh: "三线表"
+    en: "booktabs-style table"
+    note: "不要直译 three-line table"
+  - zh: "可复现"
+    en: "reproducible"
+  - zh: "复现包"
+    en: "replication package"
+
+pending:
+  - zh: "口径"
+    en_candidates:
+      - "variable definition"
+      - "consistency of measurement"
+    note: "讲定义时用前者；讲前后一致时用后者。看上下文，不要一律套一个。"
+  - zh: "抓手"
+    en_candidates:
+      - "lever"
+      - "entry point"
+      - "policy handle"
+    note: "中文政策话语特有，英文里没有稳定对应。多数场合建议改写整句，而不是硬译。"
+  - zh: "堵点"
+    en_candidates:
+      - "bottleneck"
+      - "binding constraint"
+    note: "指制度障碍时用后者更准。"
+  - zh: "组合拳"
+    en_candidates:
+      - "policy package"
+      - "bundle of measures"
+    note: "指一揽子政策时用前者。"
+  - zh: "落地"
+    en_candidates:
+      - "implementation"
+      - "operationalization"
+    note: "指政策落地用前者；指把概念变成可测量指标用后者。"
+
+fallback:
+  - zh: "中央环保督察"
+    en: "Central Environmental Protection Inspection"
+    abbr: "CEPI"
+    keep_zh: true
+    note: "首次给全称与缩写，后文用 CEPI。不要译成 central environmental inspection team。"
+  - zh: "排污许可"
+    en: "pollutant discharge permit"
+    keep_zh: true
+    note: "不要写 emission license。"
+  - zh: "碳排放权交易试点"
+    en: "pilot emissions trading scheme"
+    abbr: "pilot ETS"
+    keep_zh: true
+    note: "指 2013 年起七个省市试点。"
+  - zh: "河长制"
+    en: "river chief system"
+    keep_zh: true
+  - zh: "能耗双控"
+    en: "dual control of energy consumption"
+    keep_zh: true
+    note: "指总量与强度双控。"
+  - zh: "大气污染防治行动计划"
+    en: "Air Pollution Prevention and Control Action Plan"
+    keep_zh: true
+    note: "俗称「大气十条」，英文可括注 Ten Measures。"
+  - zh: "环保税"
+    en: "environmental protection tax"
+    keep_zh: true
+    note: "2018 年起施行，不要写 green tax。"
+  - zh: "限产停产"
+    en: "production restriction and suspension"
+    keep_zh: true
+  - zh: "重点排污单位"
+    en: "key pollutant discharging units"
+    keep_zh: true
+  - zh: "中国工业企业数据库"
+    en: "Chinese Industrial Enterprises Database"
+    abbr: "CIED"
+    keep_zh: true
+  - zh: "中国家庭追踪调查"
+    en: "China Family Panel Studies"
+    abbr: "CFPS"
+    keep_zh: true
+  - zh: "中国健康与养老追踪调查"
+    en: "China Health and Retirement Longitudinal Study"
+    abbr: "CHARLS"
+    keep_zh: true
+  - zh: "中国健康与营养调查"
+    en: "China Health and Nutrition Survey"
+    abbr: "CHNS"
+    keep_zh: true
+  - zh: "中国综合社会调查"
+    en: "Chinese General Social Survey"
+    abbr: "CGSS"
+    keep_zh: true
+  - zh: "中国海关数据库"
+    en: "China Customs Trade Database"
+    keep_zh: true

@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Office temp files
+~$*
+*.tmp
+
+# Analysis outputs that should never be committed
+output/
+cache/
+*.dta
+*.parquet
+*.rds
+*.h5
+
+# Local overrides that are not part of the kit
+skills/*/vendor/*/     

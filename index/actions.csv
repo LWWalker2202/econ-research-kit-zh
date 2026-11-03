@@ -1,0 +1,50 @@
+stage_id,stage_en,stage_zh,id,action_en,action_zh,example_en,example_zh,artifact,skill
+0,Feasibility gate,可行性闸门,F01,Data availability check,数据可得性核查,"The key variable may not exist after 2015","关键变量 2015 年后可能不再询问",feasibility.md,feasibility
+0,Feasibility gate,可行性闸门,F02,Variation check,外生变异核查,"Is there any policy shock I did not create myself?","有没有一个不是我自己造的政策冲击",feasibility.md,feasibility
+0,Feasibility gate,可行性闸门,F03,Literature gap check,文献缺口核查,"Has this exact design already been published?","这个设计是不是已经有人发过了",literature-matrix.csv,feasibility
+0,Feasibility gate,可行性闸门,F04,Cost and stop-loss estimate,成本与止损评估,"Six weeks of cleaning before I know if it works","洗六周数据还不知道能不能用",feasibility.md,feasibility
+1,Problem and literature,问题与文献,L01,Literature matrix,文献矩阵,"Twenty papers by design, not by topic","按设计而不是按主题归类二十篇",literature-matrix.csv,feasibility
+1,Problem and literature,问题与文献,L02,Gap statement,缺口陈述,"Everyone estimates the average effect, nobody has the mechanism","都估了平均效应，没人做机制",gap-statement.md,feasibility
+1,Problem and literature,问题与文献,L03,Contribution positioning,贡献定位,"Which of the three literatures am I talking to?","我到底在跟哪一支文献对话",contribution.md,feasibility
+2,Identification design,识别设计,I01,Treatment definition,处理变量定义,"Four batches of inspection, which date is the treatment date?","四批督察，哪一天算处理日",identification-memo.md,identification
+2,Identification design,识别设计,I02,Control group construction,对照组构造,"Never-inspected firms are not a valid counterfactual","从没被督察过的企业不是合格反事实",identification-memo.md,identification
+2,Identification design,识别设计,I03,Threat list,威胁清单,"Anticipation, spillover, and selection on trends","预期效应、溢出效应、趋势上的选择",threat-list.md,identification
+2,Identification design,识别设计,I04,Pre-trend and placebo plan,预趋势与安慰剂方案,"What would I expect to see if the effect were zero?","如果效应为零我该看到什么",robustness-plan.md,identification
+2,Identification design,识别设计,I05,Robustness plan,稳健性预案,"Each check must name what it protects against","每个检验要说清它在防什么",robustness-plan.md,identification
+2,Identification design,识别设计,I06,Pre-registration,预注册,"Freeze the main specification before seeing outcomes","在看到结果前冻结主设定",pre-registration.md,identification
+3,Data,数据,D01,Variable definition cross-check,变量口径核对,"The same variable name means different things in 2010 and 2018","同名变量 2010 与 2018 定义不同",definition-crosswalk.csv,data-prep
+3,Data,数据,D02,Missing and outlier screen,缺失与异常筛查,"One province is entirely missing in one year","某年某省整列缺失",missing-report.csv,data-prep
+3,Data,数据,D03,Cross-source merge and ID match,跨库合并与 ID 匹配,"The firm ID changes format after the 2013 revision","企业 ID 在 2013 年改版后格式变了",merge-report.md,data-prep
+3,Data,数据,D04,Unit and scale harmonisation,单位与量纲统一,"Ten thousand yuan versus yuan, household versus person","万元还是元，户还是人",units-table.md,data-prep
+3,Data,数据,D05,Sample construction and trimming,样本构造与裁剪,"Drop financial firms, drop ST firms, winsorise at one percent","剔金融业、剔 ST、百分之一缩尾",sample-construction.md,data-prep
+3,Data,数据,D06,Panel balance check,面板平衡性检查,"Is entry and exit informative or mechanical?","进出样本是信息还是机械的",panel-balance.csv,data-prep
+3,Data,数据,D07,Cleaning log,清洗日志,"Every exclusion needs a line and a count","每一次剔除都要有一行和一个计数",cleaning-log.md,data-prep
+3,Data,数据,D08,Codebook build,变量字典建立,"Store labels and value codes next to the data","把标签和取值码存在数据旁边",codebook.md,data-prep
+4,Estimation,估计,E01,Baseline specification,基准设定,"What is the minimal regression that answers the question?","回答问题最小的那个回归是什么",specification.md,estimation
+4,Estimation,估计,E02,Fixed effects choice,固定效应选择,"Firm FE or industry-by-year FE, and why","企业固定效应还是行业年固定效应，为什么",specification.md,estimation
+4,Estimation,估计,E03,Clustering level,聚类层级,"Treatment is assigned at the city level","处理在城市层面分配",clustering-note.md,estimation
+4,Estimation,估计,E04,Diagnostic tests,诊断检验,"Weak instruments, pre-trends, first-stage F","弱工具、预趋势、第一阶段 F",diagnostics.md,estimation
+4,Estimation,估计,E05,Heterogeneity analysis,异质性分析,"Split by ownership, not by whatever is available","按所有制分组而不是按有什么分什么",heterogeneity.md,estimation
+4,Estimation,估计,E06,Multiple testing correction,多重检验校正,"Eight subgroups, one significant","八个分组一个显著",multiple-testing.md,estimation
+4,Estimation,估计,E07,Interpretation and magnitude,系数解释与量级,"Is the effect big relative to the mean?","相对均值这个效应算大吗",interpretation.md,estimation
+5,Tables and figures,表与图,T01,Descriptive statistics table,描述性统计表,"Mean, standard deviation, and the count of non-missing","均值、标准差、非缺失数",table1.tex,tables-figures
+5,Tables and figures,表与图,T02,Baseline regression table,基准回归表,"Coefficients above, standard errors below","系数在上标准误在下",table2.tex,tables-figures
+5,Tables and figures,表与图,T03,Multi-specification table,多设定并列表,"Four columns, one per specification","四列，每列一个设定",table3.tex,tables-figures
+5,Tables and figures,表与图,T04,Event study plot,事件研究图,"Pre-period coefficients should be flat and near zero","事前系数应当平且近零",figure1.tex,tables-figures
+5,Tables and figures,表与图,T05,Coefficient plot,系数图,"Twelve subgroups in one figure","十二个分组放一张图",figure2.tex,tables-figures
+5,Tables and figures,表与图,T06,Table and figure notes,表注与图注,"Note below the table, significance levels declared","表注在下方，显著性水平要声明",notes.md,tables-figures
+6,Report,报告,R01,Directory and naming,目录与命名,"Data, code, output, and the order they run in","数据、代码、输出及其运行顺序",README.md,report
+6,Report,报告,R02,Script-to-report pipeline,脚本到报告的流水线,"The report is generated, never edited by hand","报告是生成的，不是手改的",run_all.py,report
+6,Report,报告,R03,Bilingual report,中英双语报告,"One analysis, two outputs","一次分析两个输出",report-en.md,report
+6,Report,报告,R04,Replication package,复现包,"A stranger can rebuild every table in one command","陌生人一条命令重建所有表",replication-package/,report
+7,Writing and submission,写作与投稿,W01,Abstract and JEL,摘要与 JEL 分类,"One sentence on the question, one on the design, one on the result","一句问题一句设计一句结果",abstract.md,writing
+7,Writing and submission,写作与投稿,W02,Introduction structure,引言结构,"Hook, gap, design, result, contribution","钩子、缺口、设计、结果、贡献",intro.md,writing
+7,Writing and submission,写作与投稿,W03,Identification paragraph,识别策略段,"State the assumption and its threat in one paragraph","一段话讲清假设与威胁",identification-paragraph.md,writing
+7,Writing and submission,写作与投稿,W04,Mechanism section,机制段,"Separate the mechanism test from the main result","机制检验与主结果分开写",mechanism.md,writing
+7,Writing and submission,写作与投稿,W05,Limitations section,局限段,"Name the limitation before the referee does","在审稿人之前说出局限",limitations.md,writing
+7,Writing and submission,写作与投稿,W06,Citation verification,文献核验,"Every citation must be checked against the original","每条引用都要对回原文",citation-check.csv,writing
+7,Writing and submission,写作与投稿,W07,Declarations,投稿声明,"Data availability, pre-registration, conflicts","数据可得性、预注册、利益冲突",declarations.md,writing
+8,Referee response,审稿回复,V01,Comment classification,意见分类,"Must do, arguable, or rejectable","必须做、可辩、可拒",response-plan.md,review
+8,Referee response,审稿回复,V02,Response letter,回复信,"Thank, then answer, then say where it changed","先谢，再答，再说改在哪",response-letter.md,review
+8,Referee response,审稿回复,V03,Point-by-point draft,逐条回复稿,"Quote the comment, then the answer","引用意见再写回答",point-by-point.md,review
+8,Referee response,审稿回复,V04,Revision log,修改记录,"Every changed sentence has a page number","每处修改都有页码",revision-log.md,review

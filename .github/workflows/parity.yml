@@ -1,0 +1,69 @@
+name: parity
+
+# Checks that this repository and its language mirror have the same tree,
+# the same section structure, the same acceptance counts, and the same
+# byte-identical shared files.
+#
+# Setup: add a repository variable MIRROR_REPO = <owner>/<the-other-repo>
+# (Settings -> Secrets and variables -> Actions -> Variables).
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+env:
+  MIRROR_REPO: ${{ vars.MIRROR_REPO }}
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check mirror variable
+        run: |
+          if [ -z "$MIRROR_REPO" ]; then
+            echo "MIRROR_REPO is not set; skipping parity."
+            echo "skip=true" >> "$GITHUB_ENV"
+          fi
+
+      - uses: actions/checkout@v4
+        if: env.skip != 'true'
+        with:
+          path: self
+
+      - uses: actions/checkout@v4
+        if: env.skip != 'true'
+        with:
+          repository: ${{ env.MIRROR_REPO }}
+          path: mirror
+
+      - uses: actions/setup-python@v5
+        if: env.skip != 'true'
+        with:
+          python-version: "3.11"
+
+      - name: Arrange directories by language
+        if: env.skip != 'true'
+        run: |
+          if [ "${GITHUB_REPOSITORY##*/}" = "econ-research-kit-zh" ]; then
+            mv self econ-research-kit-zh
+            mv mirror econ-research-kit
+          else
+            mv self econ-research-kit
+            mv mirror econ-research-kit-zh
+          fi
+
+      - name: Run parity check
+        if: env.skip != 'true'
+        run: python3 econ-research-kit/scripts/check_parity.py
+
+      - name: Check mirror is not stale
+        if: env.skip != 'true'
+        run: |
+          lag=$(( ( $(date +%s) - $(date -d "$(git -C mirror log -1 --format=%cI)" +%s) ) / 86400 ))
+          echo "mirror last commit: $lag day(s) ago"
+          if [ "$lag" -gt 7 ]; then
+            echo "::warning::the mirror has not been updated in $lag days"
+          fi
