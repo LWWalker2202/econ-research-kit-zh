@@ -38,9 +38,10 @@ econ-research-kit-zh/
 │   ├── labor/
 │   └── behavioral/
 ├── data-dict/               CFPS · CHARLS · 工业企业库 · 污染监测
+│   └── _catalog.md          指向外部上千个数据源的目录
 ├── teaching/                本科 · 硕士 · 博士
 ├── index/actions.csv        动作清单（双语列，唯一数据源）
-├── scripts/                 结构校验脚本
+├── scripts/                 结构校验脚本、数据源查询
 ├── glossary.yaml            术语锁定表
 ├── VERSION
 └── LICENSE
@@ -140,6 +141,7 @@ vendor 进来的是代码与 LaTeX 模板，语言中立，因此在两个语言
 2. 新工序要有全部八节。缺什么 `scripts/lint_content.py` 会告诉你。
 3. 不要在没有删掉一个的情况下加第九道工序。八道是设计，不是起点。
 4. 数字、页码、政策文号一律不许编。写 `[待填]`。
+5. 找数据源？`scripts/lookup_source.py CFPS --lang zh` 可以查外部上千个源的目录。查到只是线索；真开始用了，再在 `data-dict/` 写一篇编号条目。
 
 ## 状态
 

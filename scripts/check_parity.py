@@ -135,7 +135,7 @@ def expected_sections(lang: str):
             (lambda p: re.match(r"domains/[^/]+/measures\.md$", p), MEAS_EN),
             (lambda p: re.match(r"domains/[^/]+/data\.md$", p), DATA_EN),
             (lambda p: re.match(r"domains/[^/]+/pitfalls\.md$", p), PITF_EN),
-            (lambda p: re.match(r"data-dict/(?!README)[^/]+\.md$", p), DICT_EN),
+            (lambda p: re.match(r"data-dict/(?!README|_)[^/]+\.md$", p), DICT_EN),
             (lambda p: re.match(r"teaching/[^/]+\.md$", p), TEACH_EN),
         ]
     else:
@@ -145,7 +145,7 @@ def expected_sections(lang: str):
             (lambda p: re.match(r"domains/[^/]+/measures\.md$", p), MEAS_ZH),
             (lambda p: re.match(r"domains/[^/]+/data\.md$", p), DATA_ZH),
             (lambda p: re.match(r"domains/[^/]+/pitfalls\.md$", p), PITF_ZH),
-            (lambda p: re.match(r"data-dict/(?!README)[^/]+\.md$", p), DICT_ZH),
+            (lambda p: re.match(r"data-dict/(?!README|_)[^/]+\.md$", p), DICT_ZH),
             (lambda p: re.match(r"teaching/[^/]+\.md$", p), TEACH_ZH),
         ]
     return table

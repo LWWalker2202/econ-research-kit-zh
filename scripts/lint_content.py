@@ -111,9 +111,13 @@ def main() -> int:
                 if phrase in body:
                     problems.append(f"{rel}: banned filler or placeholder text {phrase!r}")
 
-            # version numbers (software versions age badly)
+            # version numbers (software versions age badly). Catalog ids such as
+            # 1.6.1 look like versions but are indexing numbers, and they are
+            # confined to the meta files that start with an underscore.
             for m in VERSION_NUMBER.finditer(body):
                 if own_version and m.group(0) == own_version:
+                    continue
+                if rel.startswith("data-dict/_"):
                     continue
                 problems.append(f"{rel}: version number {m.group(0)!r} — do not pin versions")
 
