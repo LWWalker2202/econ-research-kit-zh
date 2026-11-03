@@ -1,0 +1,8 @@
+mgmt-paper-publication-figures
+Copyright 2026 MGMT-Paper-Skills Contributors
+
+Independently developed. Matplotlib templates written from public matplotlib
+documentation. No source code was copied from any existing project.
+
+Skill structure (frontmatter format) inspired by existing MGMT-Paper-Skills skills
+(skills/plotting-sop/, skills/academic-writing/).

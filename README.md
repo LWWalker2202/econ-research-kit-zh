@@ -119,7 +119,7 @@ agent 应该进 `skills/tables-figures/`，先问 Stata 还是 Python，再对�
 
 表格、图形、数据清洗这些重活，开源项目早已做好。不要重写，也不要直接在原地改。
 
-`skills/tables-figures/`（以及后续的 `skills/data-prep/`）分两层：
+`skills/tables-figures/` 与 `skills/data-prep/` 各分两层：
 
 | 层 | 规矩 |
 |---|---|
@@ -128,17 +128,31 @@ agent 应该进 `skills/tables-figures/`，先问 Stata 还是 Python，再对�
 
 vendor 进来的是代码与 LaTeX 模板，语言中立，因此在两个语言镜像中**逐字节相同**。只有 `overrides/` 需要翻译。
 
-候选上游（许可证核查后再 vendor）：
+已 vendor 的项目（两批）：
 
-| 需要什么 | 上游类型 |
-|---|---|
-| 多列回归表 | Stata `esttab`、R `modelsummary` / `fixest::etable` |
-| 事件研究与系数图 | Stata `coefplot`、R `fixest::iplot` |
-| 出版级图形主题 | Kieran Healy 的 ggplot 惯例 |
-| 端到端流水线 | `codex-stata-for-economists`（面向经济学家的 Stata 管线） |
-| 分析类 skill | `awesome-econ-ai-stuff` 的 Data 与 Analysis 分类 |
+| 目录 | 上游 | Commit | 许可证 |
+|---|---|---|---|
+| `skills/tables-figures/vendor/stata-schemepack/` | asjadnaqvi/Stata-schemes（包名 `schemepack`） | `580187ca3cd1101a17da6518a258b8ac533f7c5e` | MIT |
+| `skills/tables-figures/vendor/awesome-econ-ai-stuff/` | meleantonio/awesome-econ-ai-stuff | `dd890d51c789fb8f8e316a2d7e4ed5d4bd793c50` | CC0 1.0 Universal |
+| `skills/tables-figures/vendor/mgmt-paper-skills/` | HaonanAlex/mgmt-paper-skills | `971d2f510dc849b3fbf55836f78f6f2847203a1f` | Apache-2.0，`LICENSE` 与 `NOTICE` 随材料一并转发 |
+| `skills/tables-figures/vendor/tex4econ-tab/` | FanWangEcon/Tex4Econ | `8f7a254656b98ce5c152ea3b5ed1f2833cca496e` | MIT |
+| `skills/data-prep/vendor/awesome-econ-ai-stuff/` | meleantonio/awesome-econ-ai-stuff | `dd890d51c789fb8f8e316a2d7e4ed5d4bd793c50` | CC0 1.0 Universal |
 
-**目前尚未 vendor 任何内容。** vendor 需要联网拉取并逐个核查许可证。目录已预留，上面的清单就是操作步骤。不要把代码粘进来却不记 commit。
+五个 vendor 目录、103 个文件、约 350 KB。内容分四类：
+
+- 十套 Stata 图形方案：白底整套配色加一套色盲友好配色。
+- 三份带完整骨架的提示词规范：三线表、`ggplot2` 图形、Stata 清洗 do 文件。
+- `mgmt-paper-skills/` 整目录引入三个子目录、一字未改：`mgmt-paper-tables/` 给出《经济研究》《管理世界》与 Journal of Finance、Management Science 四种刊的表格式，显著性约定、标准误选择，以及 Stata、R、Python 三套模板与测试；`mgmt-paper-publication-figures/` 是中文刊配图与三线表规范，含七类 matplotlib 模板；`mgmt-paper-journal-figures/` 是 UTD 24 种商科期刊的图表规格档。
+- `Tex4Econ` 的 `_tab/` 取五段 LaTeX 表片段：估计结果表、多面板表、正文表，只取 `.tex` 源码。
+
+许可证核查结果：
+
+- `codex-stata-for-economists` 内容有用，但整个仓库没有 `LICENSE`、`LICENCE` 或 `COPYING` 文件，各 markdown 里也没有任何许可证声明。没有许可证就没有授权，故不 vendor。
+- `EthanDeng/Chinese-ERJ`（`8cd9523ae8f34c3d272e5369a66a341317bc6c96`）许可是 LPPL 1.3c。LPPL 允许原样转发，与"原样复制"并不冲突；但材料只是《经济研究》一个刊的文档类（`chinese-erj.cls`），还依赖外部 `biblatex-gb7714-2015` 宏包，适用面太窄，故不引入。
+- `esttab`、`coefplot`、`modelsummary`、`fixest` 仍是做表和系数图的正解，但它们由用户自己的 Stata 或 R 安装，不必把代码抄进本仓。
+- 没有 MIT、BSD-2、BSD-3、Apache-2.0、CC-BY 或 CC0 明文授权的候选一律否决。"GitHub 上公开"不等于许可证。
+
+三个规矩对所有 vendor 目录生效：原样复制、永不修改；每个目录必须有 `LICENSES.md`，写明仓库地址、commit、被复制的具体文件、许可证、许可证文件在哪、复制日期；不用 git submodule，保证直接 clone 就完整。每个 `vendor/` 根目录另有一份索引 `LICENSES.md` 列出其中上游与被否候选。期刊格式惯例放 `overrides/`。不要把代码粘进来却不记 commit。
 
 ## 与中文镜像的一致性
 
@@ -161,7 +175,7 @@ vendor 进来的是代码与 LaTeX 模板，语言中立，因此在两个语言
 
 ## 状态
 
-版本 0.1.0。八道工序、三个方向、四份数据字典、三档教学读法。vendor 待做。中文镜像已对齐。
+版本 0.1.0。八道工序、三个方向、四份数据字典、三档教学读法。vendor 分两批完成：图形方案、提示词规范、三套经管期刊表图 skill 目录、LaTeX 表片段，许可证记在 `skills/*/vendor/` 下。中文镜像已对齐。
 
 ## 许可证
 
