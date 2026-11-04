@@ -19,7 +19,7 @@ try:  # make Chinese output readable on Windows consoles
 except Exception:
     pass
 
-SKIP_DIRS = {".git", "__pycache__", ".idea", ".vscode", "node_modules", "vendor"}
+SKIP_DIRS = {".git", "__pycache__", ".idea", ".vscode", "node_modules", "vendor", "output", "cache", "local"}
 EMOJI = re.compile(
     "[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF"
     "\U00002190-\U000021FF\U00002B00-\U00002BFF]"

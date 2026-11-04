@@ -34,7 +34,7 @@ except Exception:
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 
-SKIP_DIRS = {".git", "__pycache__", ".idea", ".vscode", "node_modules"}
+SKIP_DIRS = {".git", "__pycache__", ".idea", ".vscode", "node_modules", "output", "cache", "local"}
 BYTE_IDENTICAL = ["VERSION", "glossary.yaml", "index/actions.csv"]
 
 SKILL_EN = [

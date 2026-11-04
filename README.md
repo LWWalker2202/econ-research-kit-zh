@@ -1,165 +1,192 @@
 # econ-research-kit（中文镜像）
 
-面向实证经济学的工作台：**八道工序、十二个领域**，每一道工序要么有能跑的模板加金样可供比对，要么有一个读你产出的检查器。
+一套**按工序分好的经济学实证研究工具包**：从"这个题目能不能做"，到"跑回归"，到"出一张三线表"，到"写报告"，到"回审稿意见"，一共八道工序。每一道工序要么给你一个能直接跑的模板（跑完跟标准答案比对），要么给你一个检查器（把你写好的东西丢进去，它逐条挑毛病）。
 
-**版本 0.3.3** · 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 校验
+**版本 0.3.4** ｜ 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 自动比对
 
-## 为什么要做这个
+> 第一次来？直接跳到「第一步」。不用先弄懂这个仓库为什么长这样。
 
-让模型帮忙做研究时，出问题的通常不是"模型不够聪明"，而是另外三件事。
+## 一句话：这是干什么的
 
-1. **每次都从头解释一遍。** 课题设定活在一段会滚没的对话里，所以第一百次提问和第一次一样，什么都不知道。
-2. **代码看着对，但你判断不了它到底对不对。** 一张"看着像那么回事"的表不是表。对话里没有任何东西会去检查聚类层级和处理分配对不对得上。
-3. **组里每个人做法都不一样。** 交接一个课题等于交接一段对话，接手的人看不到哪些路试过、哪些被否了。
+你有一个研究题目，但不知道第一步该干什么、第二步该干什么。这个仓库把这件事拆成八段，每一段都写清楚：**进去之前手里要有啥、要问自己哪两个问题、做完要交出一个什么文件、这个文件怎么算合格**。
 
-这个库押的是相反的注：**把工序写成文件，只写一次，让模型读的和读的是同一份东西。** 文件可以被检查、被版本化、被质疑、被替换；对话不能。
+它不替你写论文，也不替你判断"这个识别策略成不成立"。它只做一件事：**逼你把该想清楚的事情写成文件，然后检查你有没有写全。**
 
-## 里面有什么
+## 你什么时候会需要它
 
-| 层 | 装什么 | 它回答什么 |
+出现下面任何一种情况，就可以打开它：
+
+1. 老师给了题目，你不知道从哪儿下手，也不想一上来就让 AI 帮你编代码。
+2. 跑完回归，出一张表，但不知道这张表能不能放进论文。
+3. 审稿人问"你的平行趋势呢""为什么聚类到这一级"，你不知道怎么答。
+4. 想用 AI 帮忙，但每次都要从头解释一遍，而且它给的东西看着对、实际不敢用。
+5. 要带本科生或低年级同学做实证，需要一份"照着做就行"的东西。
+
+## 第一步：什么都不用装，先看三样东西
+
+预计三分钟，一行命令都不用敲。
+
+| 看什么 | 文件 | 看完你会知道 |
 |---|---|---|
-| `skills/` | 八道工序的规程 | 这一步到底怎么做？ |
-| `domains/` | 十二个领域包，每包五份文件 | 我这个领域在这里特殊在哪？ |
-| `data-dict/` | 中国微观数据源 | 这个变量到底叫什么？ |
-| `index/actions.csv` | 四十九个动作，双语列 | 我现在到底想干什么？ |
-| `scripts/` | 四个校验脚本 | 仓库还是不是一致的？ |
-| `book/` | 配套用书 | 为什么长成这样？ |
+| 一、它整体长什么样 | 本文件（你正在读的这个） | 八道工序、十二个领域、怎么装 |
+| 二、本领域特殊在哪 | `domains/labor/`（劳动）或 `domains/energy-env/`（能源环境）里那五份 | 你的题目最容易在哪一步翻车 |
+| 三、一道工序到底怎么走 | `skills/feasibility/SKILL.md` | 开工前该问自己的四个问题 |
 
-一句话：`skills/` 管**怎么做**，`domains/` 管**这领域特殊在哪**，`data-dict/` 管**变量叫什么**。
+三份都读完了还想装，再往下走。
 
-## 五分钟
+## 第二步：选一种装法（三种，挑一种就行）
 
-不用装任何东西。Python 3.11 以上，只用标准库。
+先问一句：**你用的是哪个 AI 工具？**
 
-```bash
-# 1. 内容干不干净
-python scripts/lint_content.py .
+| 你用的工具 | 怎么装 | 装完在哪儿用 |
+|---|---|---|
+| AI 编程工具（Codex 桌面版 / Claude Code / DeepSeek Harness） | 把整个仓库复制到那个工具的技能目录（见下表） | 在对话里说"帮我看看这个题目能不能做"，它自己会去读 |
+| 只想在浏览器里问大模型（豆包、Kimi、ChatGPT 网页版） | 不用装。打开 `skills/` 里对应那一道的文件，把里面的**提示词正文**整段复制，粘进对话框 | 直接粘 |
+| 完全不用 AI | 不用装。当文档读 | 边做边照着看 |
 
-# 2. 两版还对得上吗
-python scripts/check_parity.py
+技能目录（选一个放，路径里的 `<你>` 换成你的 Windows 用户名）：
 
-# 3. 生成一张表，与金样比
-cd skills/tables-figures
-python templates/panel_ols.py --lang zh
-diff output/table1.tex expected/table1.tex
-```
-
-第三条命令如果没有输出，说明你刚从固定种子复现出一张出版级三线表。这才是重点：重要的不是表出来了，而是**你能判断它对不对**。
-
-## 八道工序
-
-| # | 工序 | 目录 | 它回答什么 |
-|---|---|---|---|
-| 0 | 可行性闸门 | `skills/feasibility/` | 手上的数据和变异，到底能不能做？ |
-| 1 | 问题与文献 | `skills/feasibility/`（第二部分） | 这个空白是真的吗，值得写成一篇吗？ |
-| 2 | 识别设计 | `skills/identification/` | 靠什么变异识别效应，什么会把它推翻？ |
-| 3 | 数据 | `skills/data-prep/` | 变量是不是我以为的那个意思？ |
-| 4 | 估计 | `skills/estimation/` | 设定站得住吗，每一项稳健性在防什么？ |
-| 5 | 表与图 | `skills/tables-figures/` | 产出合不合刊物格式？ |
-| 6 | 报告 | `skills/report/` | 别人能不能照着我的文件复现？ |
-| 7 | 写作与投稿 | `skills/writing/` | 文字有没有把识别故事讲出来？ |
-| - | 审稿回复 | `skills/review/` | 怎么回应，又不该让的地方没让？ |
-
-**第 0 段是闸门，不是步骤。** 它不过就停。别给一个识别根本做不成的课题去清洗数据，一年就是这么没的。
-
-## 十二个领域
-
-| 目录 | 领域 |
+| 工具 | 放哪儿 |
 |---|---|
-| `domains/energy-env/` | 能源与环境经济学 |
-| `domains/labor/` | 劳动经济学 |
-| `domains/education/` | 教育经济学 |
-| `domains/health/` | 健康经济学 |
-| `domains/behavioral/` | 行为与实验经济学 |
-| `domains/development/` | 发展经济学与田野实验 |
-| `domains/public/` | 公共经济学与政策评估 |
-| `domains/industrial-organization/` | 产业组织与规制 |
-| `domains/trade-spatial/` | 国际贸易与空间经济 |
-| `domains/macro-finance/` | 宏观经济学与金融 |
-| `domains/economic-history/` | 经济史与史料 |
-| `domains/theory/` | 理论建模与机制设计 |
+| Codex 桌面版 | `C:\Users\<你>\.codex\skills\econ-research-kit-zh\` |
+| Claude Code | `C:\Users\<你>\.claude\skills\econ-research-kit-zh\` |
+| DeepSeek Harness | `C:\Users\<你>\.agents\skills\econ-research-kit-zh\` |
 
-每个领域包有五份文件：`institutional.md`（制度背景、时间线、可以直接粘进论文的段落）、`measures.md`（处理变量怎么构造、每种定义各自假设什么）、`data.md`（数据来源、变量名、覆盖范围、已知问题）、`pitfalls.md`（审稿人会问什么、怎么回应）、`route.md`（八道工序里该看哪几段、在那里要确认什么）。
+放进去之后，那个目录里立刻应该能看到 `SKILL.md`（不要再套一层同名文件夹，这是最常见的错）。
 
-**领域是筛子，不是漏斗。** 一篇关于环境规制与企业投资的论文，同时踩在能源环境、公共经济学和产业组织上。需要的包都看，不要挑一个就住进去。
+## 第三步：确认它真的装上了
 
-## 哪些工序真的能跑
+新开一个对话（**必须是新开的**，技能列表是开对话时读的），问它一句：
 
-三道工序自己产出东西，五道工序读你产出的东西。没有一道是"提醒你小心点"的空话。
+> feasibility 那道工序判断什么？
 
-| 工序 | 给了什么 | 怎么验 |
-|---|---|---|
-| 可行性 | `check_memo.py`、填好的备忘录、六项机检 | `python skills/feasibility/templates/check_memo.py skills/feasibility/expected/feasibility-memo.md` |
-| 识别 | `check_design.py`、填好的备忘录、六项机检 | `python skills/identification/templates/check_design.py skills/identification/expected/identification-memo.md` |
-| 数据 | `clean_panel.py` 与 Stata 对照版，清洗日志作金样 | 连跑两遍，哈希不许变 |
-| 估计 | `estimate_main.py` 与 Stata 对照版，五步设定链 | `python skills/estimation/templates/estimate_main.py --lang zh` |
-| 表图 | `latex_table.py`、`panel_ols.py`，`table1.tex` 作金样 | 与 `expected/table1.tex` 比 |
-| 报告 | `build_report.py`，把产出文件变成一份报告 | 数值只从输入文件来，一次也不许猜 |
-| 写作 | `check_abstract.py`，七项机检 | `python skills/writing/templates/check_abstract.py skills/writing/expected/abstract-zh.md` |
-| 审稿 | `check_response.py`，五项机检 | `python skills/review/templates/check_response.py skills/review/expected/response-letter-zh.md` |
+如果它回答里出现"四个槽位""数据覆盖""止损判据""给出做还是不做的结论"，说明装好了。
 
-这些背后是两个习惯：**固定种子的夹具**（哈希一变，说明你动了东西），以及**每个生成器都配一份金样**（某次库升级偷偷改了格式，下次一跑就现形）。
+如果它开始泛泛而谈"要考虑研究的可行性"，说明没读到这个技能。这时补一句：
 
-## 配套用书
+> 你加载 econ-research-kit-zh 这个技能了吗？先读它的 SKILL.md 再回答。
 
-`book/` 里放着 LW Walker 以及朋友们、家人们写的《经济学提示词工程指南》：208 页、六十个模板，写给本科、硕士、博士三个层次同时看。书解释工序为什么长这样，这个仓库是能跑的那一版。该读哪一份、哪一章配哪一道工序，见 `book/README.md`。
+## 第四步：亲手跑一次，看见三份东西
 
-它的那句主张也是这个库的主张：**不可验收的提示词不是规格，是许愿。** 如果只读一章，读第三章——经济学问题描述的八个要素——然后打开 `skills/identification/SKILL.md`，看同一个想法变成文件是什么样子。
+这一步会真的算出东西来。需要：Python 3.11 以上（在 PowerShell 里敲 `python --version` 能看到版本号就说明有），以及一条安装命令。
 
-## 设计原则
+第一次跑之前，装两个库：
 
-1. **第 0 段是闸门，不是步骤。** 可行性不过的课题，不配得到干净的数据。
-2. **产出文件优先于漂亮文字。** 每一道工序都要留下文件。一次只产出了一段漂亮回答的对话，什么也没产出。
-3. **脚本优先于结果。** 没有脚本的数字只是传闻。始终生成脚本，而不只是给出结果。
-4. **领域知识与工序分开。** `skills/` 讲怎么做，`domains/` 讲这里特殊在哪。混在一起，两边都会很快过期。
-5. **一条答不了是或否的验收项，就是写坏了的验收项。** 重写它，不要把它说软。
-6. **能机检的绝不靠脑子记。** 机器晚上十一点不会犯困。
-
-## 常见误解
-
-- **这不是提示词合集。** 六十个模板在书里。这里是八道工序，各有输入、步骤、产出文件和验收清单。
-- **它不替你做完研究。** 它阻止你在一个根本做不成的事情上花三个月，并在事后让你做过的事站得住。
-- **十二个领域不是十二个 skill。** 领域回答"我这行特殊在哪"，工序回答"这一步怎么做"。两者是故意正交的。
-- **金样不是数据。** 每一份夹具都是合成的。永远不要引用 `expected` 目录里的数字。
-- **中文仓不是翻译仓。** 真正需要不同的地方是投稿规范：摘要字数、JEL 分类号还是中图分类号、表注写法、线上附录。所以 `writing` 与 `tables-figures` 两版不同，其余逐字对齐。
-
-## 装法
-
-四条路，挑一条。
-
-```bash
-# Codex
-git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.codex/skills/econ-research-kit-zh
-
-# Claude Code
-git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.claude/skills/econ-research-kit-zh
-
-# DSH：共用目录 DSH 和其它工具都会读；第二个目录只给 DSH
-git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.agents/skills/econ-research-kit-zh
-git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.dsh/skills/econ-research-kit-zh
+```
+pip install pandas pyfixest
 ```
 
-Windows 上同样这几个位置是 `%USERPROFILE%\.codex\skills\`、`%USERPROFILE%\.agents\skills\` 等等。第四条路根本不需要 agent：打开 `SKILL.md`，按路由表走，打开它指向的文件。这个仓库是当文档用也成立的。
+然后打开 PowerShell，进到这个仓库的根目录（就是能看到 `skills` 和 `domains` 这两个文件夹的那一层），把下面三条**一条一条**复制进去按回车：
 
-不想 clone 的话，去 [最新一次发布](https://github.com/LWWalker2202/econ-research-kit-zh/releases/latest) 拿打包好的：`dsh-bundle` 那个 zip 是 DeepSeek Harness 插件，装完可以在插件页启停；`codex` 那个 zip 是纯技能包，解压进技能目录即可。
+```
+python skills\estimation\templates\estimate_main.py --lang zh
+python skills\tables-figures\templates\panel_ols.py --lang zh
+python skills\report\templates\build_report.py --results output\estimation-results.json --tables output\table1.tex --out output\report.md --lang zh
+```
 
-## 验证装上了
+每一条跑完会打印一行 `wrote ...`。三条跑完之后，仓库里会多出一个 `output` 文件夹，里面四份东西：
 
-问 agent 三句话。如果第一句答得含糊，说明没加载。
+| 文件 | 这是什么 |
+|---|---|
+| `estimation-results.md` | 一份回归结果说明：三个设定、系数、标准误、聚类层级 |
+| `estimation-results.json` | 同一份结果的机器可读版，下一步要用它 |
+| `table1.tex` | 一张能直接放进论文的三线表（LaTeX 代码） |
+| `report.md` | 一份可复现报告：一句话结论、主结果、稳健性、复现方式 |
 
-1. "可行性那道工序到底在判断什么，不过会怎样？"
-2. "构造环境规制的处理变量之前，我该先读哪个文件？"
-3. "识别检查器那六项检查分别是什么？"
+**重要**：这三条命令用的是脚本自己造的数据，**目的是让你看见流程长什么样，里面的数字一个都不能引用**。你自己的数据要放进你自己的项目文件夹，不要往这个仓库里放。
 
-## 接着往下加
+想再确认一遍这个仓库没被人改坏，还可以跑两条自检命令：
 
-- **加一个领域。** 复制任意 `domains/<领域>/` 目录，五份文件名不变，`route.md` 最后写。然后跑两个校验。
-- **加一道工序。** 建 `skills/<名字>/SKILL.md`，八个固定节，再把动作加到 `index/actions.csv`。那张表是双语列，就是为了一个文件同时服务两版、且逐字节相同。
-- **vendor 上游。** 逐字节复制到 `skills/<名字>/vendor/<上游>/`，许可证与 NOTICE 摆在旁边，commit 与复制日期记进 `LICENSES.md`，**永远不要改 `vendor/` 里面的东西**。上游没有许可证的仓库，一律不 vendor。
-- **任何改动之后**，先跑 `lint_content.py`，再跑 `check_parity.py`，先推英文仓再推镜像。两版不会漂成两个项目，全靠这道对齐检查。
+```
+python scripts\lint_content.py .
+python scripts\check_parity.py
+```
 
-## 状态与许可
+第一条应打印 `OK` 加一句"多少篇 markdown 是干净的"；第二条应打印 `OK — parity holds. 227 files, 121 markdown files compared.`。两条都 OK，说明仓库是完好的。
 
-版本 0.3.3。八道工序、十二个领域包、四份数据字典、三档教学读法、四个 vendor 上游、两套从真实期刊实测出来的规范，以及每一道工序都能跑的产出或检查器。
+## 文件夹都是干什么的
 
-库本身是 MIT 许可：Copyright (c) 2026 LW Walker, with dear friends and lovely family。vendor 进来的材料各自保留自己的许可证，许可证、NOTICE 与 commit 记在它旁边的 `LICENSES.md` 里。配套用书是工作讲义，供参考与教学使用，署名同上。
+一个文件夹一句话，不用记，用到再回来查。
+
+| 文件夹 | 干什么的 |
+|---|---|
+| `skills/` | **怎么做**。八道工序各一个文件夹，每个里面有 `SKILL.md`（怎么做）、`templates/`（能跑的脚本）、`expected/`（标准答案） |
+| `domains/` | **这个领域特殊在哪**。十二个方向，每个五份：制度背景、处理变量怎么造、数据长什么样、审稿人会问什么、八道工序在本方向怎么走 |
+| `data-dict/` | **变量到底叫什么**。中国常用微观数据（CFPS、CHARLS、工业企业库、污染监测）各一份，另外挂了一个外部数据源总目录的查询入口 |
+| `index/` | 一张四十九行的动作清单：你现在想干什么，对应哪道工序。给人看，也给 AI 读 |
+| `scripts/` | 四个自检与查询脚本（内容体检、两仓对齐、动作表渲染、查数据源） |
+| `teaching/` | 本科、硕士、博士三档各怎么用这个库 |
+| `book/` | 配套小册子（第一版存档）的读法说明 |
+| `glossary.yaml` | 术语对照表：中文怎么叫、英文怎么叫、哪个是强制统一的写法 |
+
+## 八道工序：我卡在哪儿，就去哪一道
+
+| 第几道 | 工序 | 你卡住时脑子里的话 | 做完会交出一个文件 |
+|---|---|---|---|
+| 第 0 道 | 可行性 | "这题目到底能不能做？我的数据够不够？" | `feasibility-memo.md` |
+| 第 1 道 | 问题与文献 | "这跟已有文献什么关系？我的贡献在哪？" | 文献矩阵与问题陈述 |
+| 第 2 道 | 识别设计 | "别人会说我这结果是怎么假的？" | `identification-memo.md` |
+| 第 3 道 | 数据 | "这个变量前后年份口径变了吗？" | `cleaning-log.md` |
+| 第 4 道 | 估计 | "基准回归、稳健性、事件研究怎么排？" | `estimation-results.json` |
+| 第 5 道 | 表与图 | "这张表能投出去吗？" | `table1.tex` 与图 |
+| 第 6 道 | 报告 | "怎么把结果写成一段人话？" | `report.md` |
+| 第 7 道 | 写作 | "摘要怎么写？贡献句怎么写？" | 稿件 |
+| 第 8 道 | 审稿回复 | "审稿人这个问题怎么答才不虚？" | 回复信 |
+
+注意第 0 道是**闸门不是步骤**：它如果给出"别做"或"缩小范围再做"，后面七道就先停。手册里有人问"能不能跳过"，答案是：跳过它，后面七道会替你把错误放大七倍。
+
+## 十二个领域：你的题目落进哪一格
+
+| 目录 | 领域 | 目录 | 领域 |
+|---|---|---|---|
+| `energy-env` | 能源与环境 | `labor` | 劳动 |
+| `education` | 教育 | `health` | 健康 |
+| `behavioral` | 行为与实验 | `development` | 发展与田野实验 |
+| `public` | 公共政策评估 | `industrial-organization` | 产业组织与规制 |
+| `trade-spatial` | 国际贸易与空间 | `macro-finance` | 宏观与金融 |
+| `economic-history` | 经济史与史料 | `theory` | 理论建模与机制设计 |
+
+一个题目跨两个领域很正常（比如"环保督察对企业投资"，既是能源环境也是产业组织）。两个都读，不用纠结该归哪一格。
+
+## 五件常被误会的事
+
+1. **它不是自动写论文的工具。** 它不生成正文，只给你"该交什么文件、这个文件怎么算合格"。
+2. **它不判断你的识别策略成不成立。** 它只逼你把威胁列出来、把检验写出来，最后的判断还是你。
+3. **`expected/` 里的数字不能引用。** 那是脚本用合成数据跑出来的标准答案，用来比对格式和流程，不是真实结果。
+4. **`[待填]` 和 `[待核实]` 不是漏写。** 全仓约两百处，是**故意**留给你填的：数据口径、文献位置这类事必须你自己核实，AI 填了就是编。
+5. **它不是提示词合集。** 每一道工序的重点是"依次交出哪几个文件、怎么验收"，提示词只是其中一部分。
+
+## 什么都不想装？光读也能用
+
+完全可以。按这个顺序读，读完就能用：
+
+1. 读本文件第四节，知道一共有哪八道工序。
+2. 你卡在哪一道，就打开 `skills/<那一道>/SKILL.md`，读三节：`什么时候进这里`、`步骤`、`验收`。
+3. 照着"步骤"一节往下做，每做完一步对照"验收"一节自己打勾。
+4. 打不了勾的那一条，再看同一份文件里的"常见失败模式"。
+
+不装 AI 工具、不跑任何脚本，这条路也是完整的。
+
+## 出问题先翻这三条
+
+| 现象 | 原因 | 怎么办 |
+|---|---|---|
+| AI 完全不提这个库 | 技能没加载，或放错了层级 | 新开对话；确认目录里直接就是 `SKILL.md`，不要多套一层文件夹 |
+| 脚本报"没有名为 pandas 的模块" | 没装库 | 敲 `pip install pandas pyfixest` |
+| 自检命令报一大片错，但看着跟仓库无关 | 你在**别的目录**里跑了自检 | 先 `cd` 到仓库根目录（能看到 `skills` 与 `domains` 的那一层），再跑，参数写 `.` |
+
+更多排错（比如中文乱码、GitHub 连不上、CI 变红）在 `交付\02_组合包与Codex包_安装说明_v1.md` 里，那份文档专门讲"装不上怎么办"。
+
+## 谁在维护、以后怎么改
+
+- 作者与版权人：**LW Walker, with dear friends and lovely family**。
+- 两仓的关系：英文仓是主版本，本仓是中文镜像。**结构必须一致**，由 `python scripts/check_parity.py` 每次提交自动比对。
+- 改东西的顺序：改英文仓，再同步本仓，然后跑自检，最后提交。**这两样东西两仓必须逐字节相同**：`scripts/` 里所有脚本、`glossary.yaml`、`index/actions.csv`。只改一边会立刻被 CI 拦下。
+- 加了什么该写在哪：新的工序写进 `skills/`，新的领域写进 `domains/`，新的数据写进 `data-dict/`，都要在 `index/actions.csv` 里有对应的一行。
+
+## 许可、引用、以及配套那本书
+
+- 许可：MIT。可以随便用、随便改、随便放进自己的项目，保留版权声明即可。
+- `skills/*/vendor/` 里那几份第三方材料**不属于** MIT，各自保留原许可证，每个目录里的 `LICENSES.md` 记了来源仓库、commit、具体文件与许可证位置。
+- 引用：见 `LICENSE` 与 `book/README.md` 里的格式。
+- 配套小册子：本仓 `book/` 只存第一版存档；当前版不随仓库分发。同时有一本更细的**使用手册**（五万八千字、十八章、给零基础的人写的），在 Releases 页面的附件里。
