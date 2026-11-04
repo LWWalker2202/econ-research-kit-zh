@@ -62,6 +62,7 @@ description: 搭一条可复现的报告流水线：从原始数据到中间产�
 - [ ] 清空 `output/` 后渲染，零警告通过。
 - [ ] `manifests/provenance.json` 写明数据快照日期、代码提交、软件环境。
 - [ ] 重建出的表图与已审阅版本一致，若有差异，每条都在 `build/build.log` 里解释。
+- [ ] 跑 `python skills/report/templates/check_report.py output/report.md`，七项全过。
 
 ## 常见失败模式
 

@@ -60,6 +60,7 @@ description: 把冻结的估计结果做成可直接投稿的表与图：三线�
 - [ ] 排版后的 PDF 里没有表图超出版心。
 - [ ] 每张表图都在正文里被编号引用过，没有指向不存在表图的引用。
 - [ ] 同一估计文件下，Stata 与 Python 两条链导出的表逐位相同。
+- [ ] 跑 `python skills/tables-figures/templates/check_table.py output/table1.tex`，七项全过。
 
 ## 常见失败模式
 

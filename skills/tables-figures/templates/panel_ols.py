@@ -113,6 +113,7 @@ def main() -> int:
         cols,
         lang=args.lang,
         title="Baseline results" if args.lang == "en" else "基准回归结果",
+        label="tab:main",
         cluster_note=cluster_note,
     )
 
