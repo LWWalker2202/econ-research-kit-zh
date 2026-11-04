@@ -129,17 +129,19 @@ diff output/table1.tex expected/table1.tex
 
 ```bash
 # Codex
-git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.codex/skills/econ-research-kit
+git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.codex/skills/econ-research-kit-zh
 
 # Claude Code
-git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.claude/skills/econ-research-kit
+git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.claude/skills/econ-research-kit-zh
 
 # DSH：共用目录 DSH 和其它工具都会读；第二个目录只给 DSH
-git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.agents/skills/econ-research-kit
-git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.dsh/skills/econ-research-kit
+git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.agents/skills/econ-research-kit-zh
+git clone https://github.com/LWWalker2202/econ-research-kit-zh.git ~/.dsh/skills/econ-research-kit-zh
 ```
 
 Windows 上同样这几个位置是 `%USERPROFILE%\.codex\skills\`、`%USERPROFILE%\.agents\skills\` 等等。第四条路根本不需要 agent：打开 `SKILL.md`，按路由表走，打开它指向的文件。这个仓库是当文档用也成立的。
+
+不想 clone 的话，去 [最新一次发布](https://github.com/LWWalker2202/econ-research-kit-zh/releases/latest) 拿打包好的：`dsh-bundle` 那个 zip 是 DeepSeek Harness 插件，装完可以在插件页启停；`codex` 那个 zip 是纯技能包，解压进技能目录即可。
 
 ## 验证装上了
 
