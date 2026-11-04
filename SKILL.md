@@ -22,7 +22,7 @@ description: 经济学实证研究的动作库——把一次研究拆成八道�
 | # | 阶段 | 工序目录 | 它回答什么问题 |
 |---|---|---|---|
 | 0 | 可行性闸门 | `skills/feasibility/` | 手上的数据和变异，到底能不能做 |
-| 1 | 问题与文献 | `skills/feasibility/`（第二部分） | 这个缺口是真的吗，值不值得写一篇 |
+| 1 | 问题与文献 | `skills/literature/` | 这个缺口是真的吗，值不值得写一篇 |
 | 2 | 识别设计 | `skills/identification/` | 是什么变异在识别效应，什么会把它破坏 |
 | 3 | 数据 | `skills/data-prep/` | 变量真的是我以为的那个意思吗 |
 | 4 | 估计 | `skills/estimation/` | 设定站不站得住，每个稳健性检验在防什么 |
@@ -40,7 +40,7 @@ description: 经济学实证研究的动作库——把一次研究拆成八道�
 | 用户的话大概长这样 | 进入 | 第一步动作 |
 |---|---|---|
 | "我想研究 X，这东西能做吗""有没有数据""this is probably infeasible" | `skills/feasibility/` | 先清点数据与变异，一行代码都别写 |
-| "这个题目有没有人做过""novelty""文献缺口" | `skills/feasibility/` | 先建文献矩阵，再找缺口 |
+| "这个题目有没有人做过""novelty""文献缺口" | `skills/literature/` | 先写检索方案，再建矩阵 |
 | "我用 DID / IV / RDD / 事件研究""识别策略""how do I identify this" | `skills/identification/` | 先写威胁清单，再跑回归 |
 | "数据洗一下""变量怎么构造""merge 不上""口径" | `skills/data-prep/` | 先核对跨年变量定义 |
 | "跑个回归""加固定效应""稳健性""robustness" | `skills/estimation/` | 先说清聚类层级和固定效应怎么定 |

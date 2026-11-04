@@ -3,9 +3,9 @@ stage_id,stage_en,stage_zh,id,action_en,action_zh,example_en,example_zh,artifact
 0,Feasibility gate,可行性闸门,F02,Variation check,外生变异核查,"Is there any policy shock I did not create myself?","有没有一个不是我自己造的政策冲击",feasibility.md,feasibility
 0,Feasibility gate,可行性闸门,F03,Literature gap check,文献缺口核查,"Has this exact design already been published?","这个设计是不是已经有人发过了",literature-matrix.csv,feasibility
 0,Feasibility gate,可行性闸门,F04,Cost and stop-loss estimate,成本与止损评估,"Six weeks of cleaning before I know if it works","洗六周数据还不知道能不能用",feasibility.md,feasibility
-1,Problem and literature,问题与文献,L01,Literature matrix,文献矩阵,"Twenty papers by design, not by topic","按设计而不是按主题归类二十篇",literature-matrix.csv,feasibility
-1,Problem and literature,问题与文献,L02,Gap statement,缺口陈述,"Everyone estimates the average effect, nobody has the mechanism","都估了平均效应，没人做机制",gap-statement.md,feasibility
-1,Problem and literature,问题与文献,L03,Contribution positioning,贡献定位,"Which of the three literatures am I talking to?","我到底在跟哪一支文献对话",contribution.md,feasibility
+1,Problem and literature,问题与文献,L01,Literature matrix,文献矩阵,"Twenty papers by design, not by topic","按设计而不是按主题归类二十篇",literature-matrix.csv,literature
+1,Problem and literature,问题与文献,L02,Gap statement,缺口陈述,"Everyone estimates the average effect, nobody has the mechanism","都估了平均效应，没人做机制",gap-statement.md,literature
+1,Problem and literature,问题与文献,L03,Contribution positioning,贡献定位,"Which of the three literatures am I talking to?","我到底在跟哪一支文献对话",contribution.md,literature
 2,Identification design,识别设计,I01,Treatment definition,处理变量定义,"Four batches of inspection, which date is the treatment date?","四批督察，哪一天算处理日",identification-memo.md,identification
 2,Identification design,识别设计,I02,Control group construction,对照组构造,"Never-inspected firms are not a valid counterfactual","从没被督察过的企业不是合格反事实",identification-memo.md,identification
 2,Identification design,识别设计,I03,Threat list,威胁清单,"Anticipation, spillover, and selection on trends","预期效应、溢出效应、趋势上的选择",threat-list.md,identification

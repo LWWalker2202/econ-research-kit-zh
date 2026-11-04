@@ -2,7 +2,7 @@
 
 一套**按工序分好的经济学实证研究工具包**：从"这个题目能不能做"，到"跑回归"，到"出一张三线表"，到"写报告"，到"回审稿意见"，一共八道工序。每一道工序要么给你一个能直接跑的模板（跑完跟标准答案比对），要么给你一个检查器（把你写好的东西丢进去，它逐条挑毛病）。
 
-**版本 0.3.7** ｜ 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 自动比对
+**版本 0.3.8** ｜ 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 自动比对
 
 > 第一次来？直接跳到「第一步」。不用先弄懂这个仓库为什么长这样。
 
@@ -102,7 +102,7 @@ python scripts\lint_content.py .
 python scripts\check_parity.py
 ```
 
-第一条应打印 `OK` 加一句"多少篇 markdown 是干净的"；第二条应打印 `OK — parity holds. 227 files, 121 markdown files compared.`。两条都 OK，说明仓库是完好的。
+第一条应打印 `OK` 加一句"多少篇 markdown 是干净的"；第二条应打印 `OK — parity holds. 246 files, 131 markdown files compared.`。两条都 OK，说明仓库是完好的。
 
 ## 文件夹都是干什么的
 

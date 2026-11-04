@@ -1,0 +1,5 @@
+id,citation,question,design,finding,source,closest
+"示例刊甲 2019, 5(2), 11-40","Example A (2019), City wage floors and teenage employment",Does a city-level wage floor reduce teenage employment?,"Two-way fixed effects DiD on a county-year panel, 2004 reform","Teen employment falls 3.2%, effect concentrated in small firms",示例刊甲,
+"示例刊乙 2020, 33(4), 102-150","Example B (2020), Bunching at the wage floor",Do firms bunch jobs just above the new floor?,Bunching estimator on 138 reform events,Employment mass shifts up 4.1% just above the floor,示例刊乙,yes
+示例工作论文 WP-2021-07,"Example C (2021), Wage floors and firm exit",Do wage floors push small firms to exit?,Event study around county increases with firm entry and exit,Small-firm exit rises 1.8% in treated counties,示例工作论文,
+"示例刊丙 2022, 8(1), 5-31","Example D (2022), Spillovers to workers above the floor",Do wage floors raise pay above the minimum?,RDD on the wage distribution with a local linear estimator,Wages 6.5% higher up to the 40th percentile,示例刊丙,

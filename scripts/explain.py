@@ -67,9 +67,9 @@ STAGES = [
         "no": 1,
         "zh": "问题与文献",
         "en": "Question and literature",
-        "auto_zh": "还没有自动检查器（下一版会加 check_matrix.py）；下面五项先当人工核对单",
-        "auto_en": "No mechanical checker yet (check_matrix.py is planned); use the five items below as a worksheet",
-        "cmd": "",
+        "auto_zh": "自动 7 项：python skills/literature/templates/check_matrix.py 你的文献矩阵.csv",
+        "auto_en": "Seven mechanical checks: python skills/literature/templates/check_matrix.py your-matrix.csv",
+        "cmd": "python skills/literature/templates/check_matrix.py <matrix.csv>",
         "items": [
             (
                 ("一句话研究问题", "一个可以被数据推翻的句子，不是题目", "题目可以含糊，问题不行", "“关于教育与幸福感的研究”"),
@@ -90,6 +90,14 @@ STAGES = [
             (
                 ("贡献句", "明确对哪一个文献对话说话", "贡献是说给某一场对话听的", "“本文具有一定的理论意义和现实意义”"),
                 ("A contribution sentence", "Which literature the paper is talking to", "A contribution addresses a conversation", "\"This paper has theoretical and practical significance\""),
+            ),
+            (
+                ("每行都有可解析的标识", "DOI、卷期页码、或工作论文编号至少有一个", "没有标识的引用没法核，也没法让别人核", "只写了作者和年份，谁都定位不到是哪一篇"),
+                ("A resolvable identifier on every row", "A DOI, a volume-issue-page, or a working-paper number", "An identifier is what lets you and a reader check the citation", "Author and year only, so nobody can locate the paper"),
+            ),
+            (
+                ("至少三个不同来源", "期刊、工作论文、专著分开记", "只有一个来源的矩阵是读书笔记，不是文献地图", "四行全来自同一本刊"),
+                ("At least three distinct sources", "Journals, working papers and books recorded separately", "A matrix with one source is notes, not a map", "All four rows come from one journal"),
             ),
         ],
     },

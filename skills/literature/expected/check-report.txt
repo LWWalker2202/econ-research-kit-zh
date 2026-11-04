@@ -1,0 +1,8 @@
+[OK] 1 header has all seven columns
+[OK] 2 every row carries a resolvable identifier
+[OK] 3 every row states the research question
+[OK] 4 every row names the actual design
+[OK] 5 every row states a direction or a magnitude
+[OK] 6 exactly one row is marked closest
+[OK] 7 at least three distinct sources
+7/7 checks passed
