@@ -1,5 +1,5 @@
 ---
-name: econ-research-kit
+name: econ-research-kit-zh
 description: 经济学实证研究的动作库——把一次研究拆成八道可执行工序（可行性、识别、数据、估计、表图、报告、写作、审稿），每道工序都有输入、步骤、产出文件与验收标准。适用于任何实证经济学任务：可行性判断、识别策略设计、数据清洗、回归表、出版级图形、可复现报告、论文写作与审稿回复。Use for empirical economics research: feasibility, identification, data cleaning, regression tables, publication-quality figures, reproducible reports, paper writing, referee responses. 触发词：怎么做实证、识别策略、数据清洗、回归表、三线表、复现、写论文、回复审稿、研究流程。
 ---
 
