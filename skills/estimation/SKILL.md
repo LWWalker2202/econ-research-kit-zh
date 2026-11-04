@@ -27,7 +27,7 @@ description: 估计一个已经冻结的设定并为它辩护——给固定效�
 
 ## 步骤
 
-1. 按冻结的设定重建基准回归，并按事先指定的层级报告系数与聚类标准误。完成条件：表格与备忘录里的设定逐变量对得上。可直接照抄的参考实现在 `templates/estimate_main.py`，Stata 对照实现是 `templates/estimate_main.do`，钉住的金样报告在 `expected/estimation-results.md` 与 `expected/estimation-results.json`：在仓库根目录跑 `python skills/estimation/templates/estimate_main.py --lang zh`，先把 `output/estimation-results.md` 与金样逐行比对、`output/estimation-results.json` 与金样逐字节比对，再改脚本。
+1. 按冻结的设定重建基准回归，并按事先指定的层级报告系数与聚类标准误。完成条件：表格与备忘录里的设定逐变量对得上。可直接照抄的参考实现在 `templates/estimate_main.py`，Stata 对照实现是 `templates/estimate_main.do`，钉住的金样报告在 `expected/estimation-results.md` 与 `expected/estimation-results.json`：在仓库根目录跑 `python skills/estimation/templates/estimate_main.py --lang zh 要一步一步看，加 `--ladder` 写 `output/spec-ladder.md`，一级一行；或者用 `--step 1` 到 `--step 5` 跑到某一级就停，看过再往下。`templates/spec-ladder.md` 是复制到项目里、跑之前就定下哪一级是报告那一级的那张表。`，先把 `output/estimation-results.md` 与金样逐行比对、`output/estimation-results.json` 与金样逐字节比对，再改脚本。
 2. 给固定效应说理由。每一组都写出它吸收掉哪部分变异、又留下哪部分变异。完成条件：没有任何一组固定效应是因为"惯例如此"才留在里面的。
 3. 给聚类层级说理由。写明处理变量在哪一层被指派、误差在哪一层相关，再报告一种替代聚类作为检验。完成条件：备忘录里的聚类句与命令文件用的是同一个层级。
 4. 只跑挂得上威胁清单的稳健性检验，其余一律放进附录并各写一行理由。完成条件：正文里的每条检验都在表注里点名了它在防的威胁。

@@ -29,7 +29,7 @@ description: 用脚本而不是手工改表来构造分析样本——核对跨�
 
 1. 冻结原始层。把原始文件复制进只读目录，登记文件名、大小和校验值。完成条件：每个原始文件都有校验值记录，且没有任何脚本往原始目录里写。
 2. 在合并之前先核对变量口径。对每个分析变量，逐年记录确切措辞、单位和参照期。完成条件：有一张表按变量列出定义发生过变化的年份，以及每次变化所用的统一规则。
-3. 每个来源写一个清洗脚本，各自读原始文件、写一个干净的中间文件。完成条件：跑一条命令就能从原始文件重建中间文件，重跑得到的校验值相同。可直接照抄的参考实现在 `templates/clean_panel.py`，Stata 对照实现是 `templates/clean_panel.do`，钉住的金样日志在 `expected/cleaning-log.md`：在仓库根目录跑 `python skills/data-prep/templates/clean_panel.py --lang zh`，先把 `output/cleaning-log.md` 与金样逐行比对，再改脚本。
+3. 每个来源写一个清洗脚本，各自读原始文件、写一个干净的中间文件。完成条件：跑一条命令就能从原始文件重建中间文件，重跑得到的校验值相同。可直接照抄的参考实现在 `templates/clean_panel.py`，Stata 对照实现是 `templates/clean_panel.do`，钉住的金样日志在 `expected/cleaning-log.md`：在仓库根目录跑 `python skills/data-prep/templates/clean_panel.py --lang zh 要一步一步看，先跑 `python skills/data-prep/templates/clean_panel.py --decisions`：它写出 `output/cleaning-decisions.md`，一个动作一行，不动数据。然后 `--step 1` 到 `--step 6` 一级一级跑，每一步留下的文件看过再进下一步。`templates/cleaning-decisions.md` 是复制到项目里、跑之前签字同意的那张表。`，先把 `output/cleaning-log.md` 与金样逐行比对，再改脚本。
 4. 筛查缺失与异常值。按变量、年份、分组计算缺失率；把落在文档范围之外的值标出来；不许静默删除。完成条件：每一次删除都是日志里的一行，带删除前后的计数。
 5. 按标识符合并并报告匹配情况。把两边未匹配的记录都留在单独的文件里，按年份报告匹配率。完成条件：匹配报告给出未匹配计数，并给每条记录一个原因归类。
 6. 统一单位与量纲。在脚本里把每个变量换算到一个单位和价格基准上，不许在表格单元格里换算。完成条件：下游脚本里不再出现任何单位换算系数。

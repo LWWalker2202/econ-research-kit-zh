@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import os
+import sys
 
 import numpy as np
 import pandas as pd
@@ -148,26 +149,35 @@ def sha256_of(path: str) -> str:
 
 
 # ---- the six cleaning steps ----------------------------------------------
-def clean_panel(dirty: pd.DataFrame):
-    """Run the six steps and return the cleaned frame plus the numbers."""
-    stats = {"rows_generated": len(dirty)}
+# ---- the six steps, one function each ------------------------------------
+# `clean_panel` below runs them in order. `main` can run them one at a time with
+# `--step N`, which stops after step N and says what step N+1 would do: that is
+# the stepwise mode the stage-3 confirmation point in SKILL.md refers to.
 
-    # Step 1: duplicates, removed on the full row.
-    deduped = dirty.drop_duplicates().reset_index(drop=True)
-    stats["dup_removed"] = len(dirty) - len(deduped)
+
+def step_1_dedupe(kept, stats):
+    """Remove exact duplicate rows."""
+    deduped = kept.drop_duplicates().reset_index(drop=True)
+    stats["dup_removed"] = len(kept) - len(deduped)
     stats["rows_after_dedup"] = len(deduped)
+    return deduped
 
-    # Step 2: missing values in key fields. Rate first, then the drop.
+
+def step_2_missing(kept, stats):
+    """Drop rows missing a key field. The rate is computed before any drop."""
     stats["missing"] = []
     for column in ("revenue", "roa", "leverage"):
-        count = int(deduped[column].isna().sum())
+        count = int(kept[column].isna().sum())
         stats["missing"].append((column, count, column in KEY_FIELDS))
-    key_mask = deduped["revenue"].isna() | deduped["roa"].isna()
+    key_mask = kept["revenue"].isna() | kept["roa"].isna()
     stats["rows_dropped"] = int(key_mask.sum())
-    kept = deduped.loc[~key_mask].copy().reset_index(drop=True)
+    kept = kept.loc[~key_mask].copy().reset_index(drop=True)
     stats["rows_after_missing"] = len(kept)
+    return kept
 
-    # Step 3: panel balance. Gaps are reported, not filled.
+
+def step_3_balance(kept, stats):
+    """Report panel gaps. Nothing is filled in."""
     per_year = kept.groupby("year").size()
     balance = []
     for offset in range(N_YEAR):
@@ -177,9 +187,12 @@ def clean_panel(dirty: pd.DataFrame):
     stats["balance"] = balance
     stats["cells_present"] = len(kept)
     stats["cells_missing"] = BALANCED_CELLS - len(kept)
+    return kept
 
-    # Step 4: winsorize the ratios. The level variable revenue is not pooled in
-    # here because its unit is still mixed at this step (see step 5).
+
+def step_4_winsorize(kept, stats):
+    """Winsorize the ratios. The level variable is not pooled in here because its
+    unit is still mixed at this step; see step 5."""
     stats["winsor"] = []
     for column in WINSOR_FIELDS:
         series = kept[column]
@@ -197,8 +210,11 @@ def clean_panel(dirty: pd.DataFrame):
             }
         )
         kept[column] = series.clip(lower=low, upper=high)
+    return kept
 
-    # Step 5: harmonize units in code, never in a spreadsheet cell.
+
+def step_5_units(kept, stats):
+    """Harmonise the unit in code, never in a spreadsheet cell."""
     early = kept["year"] <= YEAR_YUAN_LAST
     stats["rows_converted"] = int(early.sum())
     stats["mean_before"] = float(kept["revenue"].mean())
@@ -207,8 +223,11 @@ def clean_panel(dirty: pd.DataFrame):
     stats["revenue_wan_min"] = float(kept["revenue_wan"].min())
     stats["revenue_wan_max"] = float(kept["revenue_wan"].max())
     kept = kept.drop(columns=["revenue"])
+    return kept
 
-    # Step 6: definition drift. Compare the codebook, do not assume stability.
+
+def step_6_drift(kept, stats):
+    """Flag the definition drift. Compare the codebook, do not assume stability."""
     stats["drift"] = [
         {"var": var, "kind": DRIFT_KIND[var], "periods": periods}
         for var, periods in DEFINITIONS.items()
@@ -223,6 +242,216 @@ def clean_panel(dirty: pd.DataFrame):
         stats["vintage"].append(
             (vintage, f"{first}-{last}", len(subset), float(subset["roa"].mean()))
         )
+    return kept
+
+
+CLEAN_STEPS = (
+    (1, step_1_dedupe),
+    (2, step_2_missing),
+    (3, step_3_balance),
+    (4, step_4_winsorize),
+    (5, step_5_units),
+    (6, step_6_drift),
+)
+
+CLEAN_LABEL = {
+    1: {"en": "Drop exact duplicate rows", "zh": "删除完全重复的行"},
+    2: {"en": "Drop rows missing a key field", "zh": "删掉关键字段缺失的行"},
+    3: {"en": "Report panel gaps, fill nothing", "zh": "报告面板缺口，不插补"},
+    4: {
+        "en": "Winsorize the ratios at 1 and 99 percent",
+        "zh": "对比率变量在 1 与 99 分位缩尾",
+    },
+    5: {"en": "Harmonise the unit in code", "zh": "在代码里统一单位"},
+    6: {"en": "Flag the definition drift", "zh": "标注口径漂移"},
+}
+
+CLEAN_DEFAULT = {
+    1: {
+        "en": "keep the first copy, drop later copies",
+        "zh": "保留首次出现，删后出现的副本",
+    },
+    2: {
+        "en": "compute the missing rate first, then drop",
+        "zh": "先算缺失率，再删",
+    },
+    3: {"en": "report only, never fill", "zh": "只报告，不插补"},
+    4: {
+        "en": "clip at the 1st and 99th percentile, keep the row",
+        "zh": "在 1 与 99 分位截断，不删行",
+    },
+    5: {
+        "en": "convert to ten-thousand yuan in a new column",
+        "zh": "换算成万元并另存一列",
+    },
+    6: {
+        "en": "add a vintage column, do not merge the definitions",
+        "zh": "加一列版本号，不合并两套口径",
+    },
+}
+
+
+def moved(index: int, stats) -> str:
+    """How much step `index` touched, with the unit that makes the number mean something."""
+    if index == 1:
+        return "{0} rows".format(stats["dup_removed"])
+    if index == 2:
+        return "{0} rows".format(stats["rows_dropped"])
+    if index == 3:
+        return "{0} cells".format(stats["cells_missing"])
+    if index == 4:
+        values = sum(item["clipped_low"] + item["clipped_high"] for item in stats["winsor"])
+        return "{0} values".format(values)
+    if index == 5:
+        return "{0} rows".format(stats["rows_converted"])
+    return "{0} variables".format(len(stats["drift"]))
+
+
+def moved_zh(index: int, stats) -> str:
+    if index == 1:
+        return "{0} 行".format(stats["dup_removed"])
+    if index == 2:
+        return "{0} 行".format(stats["rows_dropped"])
+    if index == 3:
+        return "{0} 格".format(stats["cells_missing"])
+    if index == 4:
+        values = sum(item["clipped_low"] + item["clipped_high"] for item in stats["winsor"])
+        return "{0} 个值".format(values)
+    if index == 5:
+        return "{0} 行".format(stats["rows_converted"])
+    return "{0} 个变量".format(len(stats["drift"]))
+
+
+def moved_text(index: int, stats, lang: str) -> str:
+    return moved_zh(index, stats) if lang == "zh" else moved(index, stats)
+
+
+CLEAN_TEXT = {
+    "en": {
+        "dec_h1": "# Cleaning decisions",
+        "dec_lead": (
+            "Written before any row is touched. One row per action, in the order the "
+            "script runs them. Fill `Your call`, and only then run `--step`."
+        ),
+        "dec_head": [
+            "#",
+            "Action",
+            "Rows in",
+            "Rows out",
+            "What it touches",
+            "Default",
+            "Your call",
+        ],
+        "dec_tail": (
+            "Run `python skills/data-prep/templates/clean_panel.py --step 1`, read the "
+            "file it leaves, then `--step 2`, and so on. Each run stops and prints what "
+            "the next step would do."
+        ),
+        "note_h1": "# Step {step} of 6: {label}",
+        "note_does": "This step only does: {label}.",
+        "note_rows": "Rows: {before} before, {after} after.",
+        "note_out": "Produces: {path}",
+        "note_next": "Next, not run yet: step {next_step}, {next_label}.",
+        "note_stop": (
+            "Stops and waits for you: run --step {next_step} only after you have looked "
+            "at this file."
+        ),
+        "note_last": (
+            "Last step. Run without --step to write the full log and the cleaned panel."
+        ),
+        "cli_next": "next, not run yet: step {next_step}, {next_label}",
+        "cli_stop": "stopping here: run --step {next_step} once you have looked",
+    },
+    "zh": {
+        "dec_h1": "# 清洗决策表",
+        "dec_lead": (
+            "在任何一行数据被改动之前写好。一个动作一行，顺序就是脚本的执行顺序。"
+            "先把 `你的决定` 填上，再跑 `--step`。"
+        ),
+        "dec_head": [
+            "#",
+            "动作",
+            "进多少行",
+            "出多少行",
+            "动了多少",
+            "默认做法",
+            "你的决定",
+        ],
+        "dec_tail": (
+            "先跑 `python skills/data-prep/templates/clean_panel.py --step 1`，看它留下的文件，"
+            "再跑 `--step 2`，依此类推。每次都停下来，并打印下一步会做什么。"
+        ),
+        "note_h1": "# 第 {step} 步，共 6 步：{label}",
+        "note_does": "这一步只做：{label}。",
+        "note_rows": "行数：做之前 {before} 行，做完 {after} 行。",
+        "note_out": "产出：{path}",
+        "note_next": "下一步还没跑：第 {next_step} 步，{next_label}。",
+        "note_stop": "停下来等你：看过这个文件之后，再跑 --step {next_step}。",
+        "note_last": "这是最后一步。不带 --step 跑一次，会写出完整的日志与清洗后的面板。",
+        "cli_next": "下一步还没跑：第 {next_step} 步，{next_label}",
+        "cli_stop": "停在这里：看过之后，再跑 --step {next_step}",
+    },
+}
+
+
+def render_decisions(stats, lang: str) -> str:
+    text = CLEAN_TEXT[lang]
+    rows = ["| " + " | ".join(text["dec_head"]) + " |"]
+    rows.append("|" + "---|" * len(text["dec_head"]))
+    for index, before, after in stats["trace"]:
+        rows.append(
+            "| {0} | {1} | {2} | {3} | {4} | {5} |  |".format(
+                index,
+                CLEAN_LABEL[index][lang],
+                before,
+                after,
+                moved_text(index, stats, lang),
+                CLEAN_DEFAULT[index][lang],
+            )
+        )
+    lines = [text["dec_h1"], "", text["dec_lead"], ""]
+    lines.extend(rows)
+    lines.extend(["", text["dec_tail"], ""])
+    return "\n".join(lines)
+
+
+def render_step_note(stats, step: int, lang: str, csv_path: str) -> str:
+    text = CLEAN_TEXT[lang]
+    trace = [item for item in stats["trace"] if item[0] == step][0]
+    _, before, after = trace
+    lines = [
+        text["note_h1"].format(step=step, label=CLEAN_LABEL[step][lang]),
+        "",
+        text["note_does"].format(label=CLEAN_LABEL[step][lang]),
+        text["note_rows"].format(before=before, after=after),
+        text["note_out"].format(path=csv_path),
+        "",
+    ]
+    if step < 6:
+        lines.append(
+            text["note_next"].format(
+                next_step=step + 1, next_label=CLEAN_LABEL[step + 1][lang]
+            )
+        )
+        lines.append(text["note_stop"].format(next_step=step + 1))
+    else:
+        lines.append(text["note_last"])
+    lines.append("")
+    return "\n".join(lines)
+
+
+def clean_panel(dirty: pd.DataFrame, upto: int = 6):
+    """Run the six steps, or the first `upto` of them, and return frame plus numbers."""
+    stats = {"rows_generated": len(dirty), "trace": []}
+    kept = dirty
+    for index, step in CLEAN_STEPS:
+        if index > upto:
+            break
+        before = len(kept)
+        kept = step(kept, stats)
+        stats["trace"].append((index, before, len(kept)))
+    if upto < 6:
+        return kept, stats
 
     cleaned = kept[["firm", "year", "revenue_wan", "roa", "leverage", "roa_vintage"]]
     cleaned = cleaned.sort_values(["firm", "year"]).reset_index(drop=True)
@@ -776,12 +1005,58 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lang", choices=("en", "zh"), default="en")
     parser.add_argument("--out-dir", default="output")
+    parser.add_argument(
+        "--decisions",
+        action="store_true",
+        help="write the cleaning decision table and stop; no data file is written",
+    )
+    parser.add_argument(
+        "--step",
+        type=int,
+        default=0,
+        metavar="N",
+        help="run only the first N of the six steps, then stop (1 to 6)",
+    )
     args = parser.parse_args()
-
-    cleaned, stats = clean_panel(make_dirty_panel())
 
     out_dir = os.path.abspath(args.out_dir)
     os.makedirs(out_dir, exist_ok=True)
+    dirty = make_dirty_panel()
+
+    if args.decisions:
+        _, stats = clean_panel(dirty)
+        path = os.path.join(out_dir, "cleaning-decisions.md")
+        with open(path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(render_decisions(stats, args.lang))
+        print(f"wrote {path} ({len(stats['trace'])} actions, no data file written)")
+        return 0
+
+    if args.step:
+        if not 1 <= args.step <= 6:
+            print("--step takes a number from 1 to 6", file=sys.stderr)
+            return 2
+        kept, stats = clean_panel(dirty, upto=args.step)
+        csv_path = os.path.join(out_dir, "clean_panel_step{0}.csv".format(args.step))
+        kept.to_csv(
+            csv_path, index=False, float_format="%.6f", lineterminator="\n", na_rep=""
+        )
+        note_path = os.path.join(out_dir, "cleaning-step{0}.md".format(args.step))
+        with open(note_path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(render_step_note(stats, args.step, args.lang, csv_path))
+        print(f"wrote {csv_path} ({len(kept)} rows)")
+        print(f"wrote {note_path}")
+        if args.step < 6:
+            text = CLEAN_TEXT[args.lang]
+            print(
+                text["cli_next"].format(
+                    next_step=args.step + 1,
+                    next_label=CLEAN_LABEL[args.step + 1][args.lang],
+                )
+            )
+            print(text["cli_stop"].format(next_step=args.step + 1))
+        return 0
+
+    cleaned, stats = clean_panel(dirty)
 
     csv_path = os.path.join(out_dir, "clean_panel.csv")
     cleaned.to_csv(

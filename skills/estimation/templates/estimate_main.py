@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import sys
 import json
 import os
 
@@ -582,27 +583,213 @@ def build_json(results: dict) -> str:
     return json.dumps(results, indent=2, ensure_ascii=False, allow_nan=False) + "\n"
 
 
+LADDER_TEXT = {
+    "en": {
+        "h1": "# Specification ladder",
+        "lead": (
+            "One rung per row, in the order they were run. What matters is how far the "
+            "coefficient moves between rungs, not its value on any single rung."
+        ),
+        "head": [
+            "Step",
+            "What changes",
+            "Fixed effects",
+            "Clustering",
+            "N",
+            "R2",
+            "Coefficient on D (SE)",
+            "Change vs previous",
+        ],
+        "rung": {
+            "m1": "Baseline, treatment dummy only",
+            "m2": "Add control variables",
+            "m3": "Cluster at the individual level",
+        },
+        "event": "Event study around the treatment date",
+        "robust": "Alternative clustering levels",
+        "none": "",
+        "stop": "Stops and waits for you: run --step {nxt} only after you have looked at this file.",
+        "last": "Last rung. Run without --step for the full result file.",
+        "alt_head": ["Clustering", "Clusters", "Coefficient on D", "Standard error"],
+        "alt_lead": "The same specification under four variance estimators.",
+        "ev_head": ["term", "coef (se)"],
+        "cli_next": "next, not run yet: rung {next_step}, {next_label}",
+    },
+    "zh": {
+        "h1": "# 设定阶梯",
+        "lead": (
+            "一级一行，顺序就是实际跑的顺序。要紧的是系数在级与级之间走了多远，"
+            "而不是任何单独一级上的数值。"
+        ),
+        "head": [
+            "步",
+            "改了什么",
+            "固定效应",
+            "聚类层级",
+            "N",
+            "R2",
+            "D 的系数（标准误）",
+            "相对上一级",
+        ],
+        "rung": {
+            "m1": "基准，只放处理变量",
+            "m2": "加控制变量",
+            "m3": "聚类到个体",
+        },
+        "event": "围绕处理日的事件研究",
+        "robust": "换其他聚类层级",
+        "none": "",
+        "stop": "停下来等你：看过这个文件之后，再跑 --step {nxt}。",
+        "last": "这是最后一级。不带 --step 跑一次，会写出完整结果文件。",
+        "alt_head": ["聚类", "簇数", "D 的系数", "标准误"],
+        "alt_lead": "同一个设定，四种方差估计量下的结果。",
+        "ev_head": ["项", "系数（标准误）"],
+        "cli_next": "下一步还没跑：第 {next_step} 级，{next_label}",
+    },
+}
+
+LADDER_NEXT = {1: "m2", 2: "m3", 3: "event", 4: "robust"}
+
+
+def _on_d(coefficients_list) -> dict:
+    for row in coefficients_list:
+        if row["term"] == "D":
+            return row
+    return {"coef": float("nan"), "se": float("nan")}
+
+
+def render_ladder(results, lang: str, upto: int = 5) -> str:
+    text = LADDER_TEXT[lang]
+    rows = []
+    previous = None
+    for spec in results["specifications"]:
+        step = int(spec["id"][1:])
+        if step > upto:
+            break
+        hit = _on_d(spec["coefficients"])
+        change = text["none"] if previous is None else "{0:+.4f}".format(hit["coef"] - previous)
+        previous = hit["coef"]
+        rows.append(
+            "| {0} | {1} | {2} | {3} | {4} | {5:.3f} | {6:.4f} ({7:.4f}) | {8} |".format(
+                step,
+                text["rung"][spec["id"]],
+                " + ".join(spec["fixef"]) or "-",
+                spec["vcov"],
+                spec["n_obs"],
+                spec["r2"],
+                hit["coef"],
+                hit["se"],
+                change,
+            )
+        )
+
+    lines = [text["h1"], "", text["lead"], ""]
+    lines.append("| " + " | ".join(text["head"]) + " |")
+    lines.append("|" + "---|" * len(text["head"]))
+    lines.extend(rows)
+
+    if upto >= 4:
+        event = results["event_study"]
+        lines.extend(
+            [
+                "",
+                "## {0}".format(text["event"]),
+                "",
+                "| " + text["ev_head"][0] + " | " + text["ev_head"][1] + " |",
+                "|---|---|",
+            ]
+        )
+        for row in event["coefficients"]:
+            lines.append("| {0} | {1:.4f} ({2:.4f}) |".format(row["term"], row["coef"], row["se"]))
+
+    if upto >= 5:
+        lines.extend(
+            [
+                "",
+                "## {0}".format(text["robust"]),
+                "",
+                text["alt_lead"],
+                "",
+                "| " + " | ".join(text["alt_head"]) + " |",
+                "|" + "---|" * len(text["alt_head"]),
+            ]
+        )
+        for level in results["robustness"]["levels"]:
+            clusters = level["n_clusters"] if level["n_clusters"] is not None else "-"
+            lines.append(
+                "| {0} | {1} | {2:.4f} | {3:.4f} |".format(
+                    level["vcov"], clusters, level["coef"], level["se"]
+                )
+            )
+
+    if upto < 5:
+        lines.extend(["", text["stop"].format(nxt=upto + 1)])
+    else:
+        lines.extend(["", text["last"]])
+    lines.append("")
+    return "\n".join(lines)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--lang", choices=("en", "zh"), default="en", help="report wording")
-    parser.add_argument("--out-dir", default="output", help="directory for the two outputs")
+    parser.add_argument("--out-dir", default="output", help="directory for the outputs")
+    parser.add_argument(
+        "--ladder",
+        action="store_true",
+        help="also write spec-ladder.md, one rung per line",
+    )
+    parser.add_argument(
+        "--step",
+        type=int,
+        default=0,
+        metavar="N",
+        help="run only the first N rungs and stop (1 to 5)",
+    )
     args = parser.parse_args()
 
     panel = make_panel()
     results = estimate(panel)
+
+    os.makedirs(args.out_dir, exist_ok=True)
+
+    if args.step:
+        if not 1 <= args.step <= 5:
+            print("--step takes a number from 1 to 5", file=sys.stderr)
+            return 2
+        ladder_path = os.path.join(args.out_dir, "spec-ladder-step{0}.md".format(args.step))
+        with open(ladder_path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(render_ladder(results, args.lang, upto=args.step))
+        text = LADDER_TEXT[args.lang]
+        print("wrote {0}".format(os.path.abspath(ladder_path)))
+        if args.step < 5:
+            nxt = args.step + 1
+            if nxt <= 3:
+                next_label = text["rung"]["m{0}".format(nxt)]
+            elif nxt == 4:
+                next_label = text["event"]
+            else:
+                next_label = text["robust"]
+            print(text["cli_next"].format(next_step=nxt, next_label=next_label))
+        return 0
 
     json_text = build_json(results)
     json_bytes = json_text.encode("utf-8")
     json_sha = hashlib.sha256(json_bytes).hexdigest()
     md_text = render_md(results, args.lang, json_sha)
 
-    os.makedirs(args.out_dir, exist_ok=True)
     md_path = os.path.join(args.out_dir, "estimation-results.md")
     json_path = os.path.join(args.out_dir, "estimation-results.json")
     with open(md_path, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(md_text)
     with open(json_path, "wb") as handle:
         handle.write(json_bytes)
+
+    if args.ladder:
+        ladder_path = os.path.join(args.out_dir, "spec-ladder.md")
+        with open(ladder_path, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(render_ladder(results, args.lang, upto=5))
+        print("wrote {0}".format(os.path.abspath(ladder_path)))
 
     specs = len(results["specifications"])
     print("wrote {0} ({1} specifications, {2} bytes)".format(os.path.abspath(md_path), specs, len(md_text)))
