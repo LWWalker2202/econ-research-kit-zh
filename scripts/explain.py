@@ -282,6 +282,42 @@ STAGES = [
 ]
 
 
+# 第 3、4 段不走"逐条解释"，因为这两段的检查项就是脚本本身：清洗有决策表与六步，
+# 估计有阶梯与五级。这里只指路，并说明检查项写在哪。
+RUNNABLE = {
+    3: {
+        "zh": ("数据", "这一段有两件能跑的东西，逐条检查项写在 skill 的验收清单里（8 条）。",
+               "python skills/data-prep/templates/clean_panel.py --decisions",
+               "skills/data-prep/SKILL.md"),
+        "en": ("Data", "Two things actually run here; the item-by-item checks are in the skill's acceptance list (8 items).",
+               "python skills/data-prep/templates/clean_panel.py --decisions",
+               "skills/data-prep/SKILL.md"),
+    },
+    4: {
+        "zh": ("估计", "这一段有两件能跑的东西，逐条检查项写在 skill 的验收清单里（8 条）。",
+               "python skills/estimation/templates/estimate_main.py --ladder",
+               "skills/estimation/SKILL.md"),
+        "en": ("Estimation", "Two things actually run here; the item-by-item checks are in the skill's acceptance list (8 items).",
+               "python skills/estimation/templates/estimate_main.py --ladder",
+               "skills/estimation/SKILL.md"),
+    },
+}
+
+
+def render_runnable(no, lang):
+    zh = lang == "zh"
+    name, blurb, cmd, skill_path = RUNNABLE[no][lang]
+    lines = ["【第 %d 段 · %s】" % (no, name) if zh else "Stage %d · %s" % (no, name), blurb, ""]
+    lines.append(("先跑这一句：" if zh else "Run this first: ") + cmd)
+    lines.append("  " + ("它把这一段的每一步摆成一张表，你看表再决定。" if zh
+                         else "It lays the stage out as a table; you read it before deciding."))
+    lines.append("")
+    lines.append(("逐条检查项在：" if zh else "The item-by-item checks are in: ") + skill_path)
+    lines.append("  " + ("打开它找「验收」那一节，每一条都能回答是或否。" if zh
+                         else "Open it and read the Acceptance section; every item answers yes or no."))
+    return "\n".join(lines) + "\n"
+
+
 def find(no):
     for stage in STAGES:
         if stage["no"] == no:
@@ -308,19 +344,25 @@ def render(stage, lang):
 
 def listing(lang):
     zh = lang == "zh"
-    out = ["八道工序的检查单（用 python scripts/explain.py <段号> 看某一段）", ""] if zh else [
-        "Checks per stage (use python scripts/explain.py <stage>)",
+    out = ["九段工序的检查单（用 python scripts/explain.py <段号> 看某一段）", ""] if zh else [
+        "Checks per stage, nine of them (use python scripts/explain.py <stage>)",
         "",
     ]
-    for stage in STAGES:
-        head = ("第 %d 段" % stage["no"]) if zh else ("Stage %d" % stage["no"])
-        name = stage["zh"] if zh else stage["en"]
-        mark = ("自动 %d 项" % len(stage["items"])) if (zh and stage["cmd"]) else (
-            ("%d checks" % len(stage["items"])) if (not zh and stage["cmd"]) else (
-                ("人工 %d 项" % len(stage["items"])) if zh else ("%d items, by hand" % len(stage["items"]))
-            )
-        )
-        out.append("  %-9s %-14s %s" % (head, name, mark))
+    names = {s["no"]: (s["zh"] if zh else s["en"]) for s in STAGES}
+    names[3] = "数据" if zh else "Data"
+    names[4] = "估计" if zh else "Estimation"
+    for no in sorted(names):
+        head = ("第 %d 段" % no) if zh else ("Stage %d" % no)
+        if no in RUNNABLE:
+            mark = "可跑 2 个脚本（检查项在 SKILL.md）" if zh else "2 runnable scripts (checks in SKILL.md)"
+        else:
+            stage = find(no)
+            if zh:
+                mark = ("自动 %d 项" % len(stage["items"])) if stage["cmd"] else ("人工 %d 项" % len(stage["items"]))
+            else:
+                mark = ("%d checks" % len(stage["items"])) if stage["cmd"] else (
+                    "%d items, by hand" % len(stage["items"]))
+        out.append("  %-9s %-14s %s" % (head, names[no], mark))
     return "\n".join(out) + "\n"
 
 
@@ -342,6 +384,9 @@ def main(argv=None):
     except ValueError:
         sys.stderr.write(("段号必须是 0 到 8 的整数\n" if args.lang == "zh" else "Stage must be an integer from 0 to 8\n"))
         return 2
+    if no in RUNNABLE:
+        sys.stdout.write(render_runnable(no, args.lang))
+        return 0
     stage = find(no)
     if stage is None:
         sys.stderr.write(

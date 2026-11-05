@@ -101,7 +101,7 @@ python scripts/recall.py
 | 7 写作 | 这段初稿哪一部分要打回去？ | 不能 |
 | 8 审稿回复 | 这条意见是改还是争，理由这样写吗？ | 不能 |
 
-`python scripts/stage.py 3` 会打印任意一段的状态头与那句确认话，免得两个会话说法不一致。`workflows/main.yaml` 把同一条主线写成机器能读的交接契约：每一段声明 `requires`（进这一段之前磁盘上必须有什么）与 `produces`（这一段结束时必须交出什么），`python scripts/workflow_check.py` 会在「某一段 require 了没人产出的东西」时直接报错。`python scripts/gate.py status` 把这道闸门从「文档约定」变成机制：它按项目存一份状态（`.econ-kit/gate.json`），这一段的产物没齐、或者没有一句至少八个字的人话回答，就不许往下走，并把答复和时间记在案上。往前走只有一条命令 `gate.py pass "<你的回答>"`；`--force` 能跳，但会把缺口写在案上。想知道任意一段的检查项到底在查什么，跑 `python scripts/explain.py 3`（`--list` 列出八段）。
+`python scripts/stage.py 3` 会打印任意一段的状态头与那句确认话，免得两个会话说法不一致。`workflows/main.yaml` 把同一条主线写成机器能读的交接契约：每一段声明 `requires`（进这一段之前磁盘上必须有什么）与 `produces`（这一段结束时必须交出什么），`python scripts/workflow_check.py` 会在「某一段 require 了没人产出的东西」时直接报错。`python scripts/gate.py status` 把这道闸门从「文档约定」变成机制：它按项目存一份状态（`.econ-kit/gate.json`），这一段的产物没齐、或者没有一句至少八个字的人话回答，就不许往下走，并把答复和时间记在案上。往前走只有一条命令 `gate.py pass "<你的回答>"`；`--force` 能跳，但会把缺口写在案上。想知道任意一段的检查项到底在查什么，跑 `python scripts/explain.py 6`（`--list` 列出全部九段；第 3、4 段本来就有可跑脚本，它会直接指到脚本和那两道工序的验收清单）。
 
 ## 术语拿不准时
 
