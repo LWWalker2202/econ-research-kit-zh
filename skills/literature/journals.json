@@ -1,19 +1,19 @@
 {
-  "_comment": "期刊分层表。A = 综合顶刊与领域顶刊；B = 领域主力刊；WP = 工作论文系列（不参与 A/B 过滤）。名字写 Crossref 里的 container-title 原文，大小写不敏感。这一版是人工判断的起点，不是权威排名 —— 改它不用改代码。",
-  "version": 1,
+  "_comment": "期刊分层表。A = 综合顶刊与领域顶刊；B = 领域主力刊；WP = 工作论文系列（不参与 A/B 过滤）。名字写 Crossref 里的 container-title 原文（逐条用 ISSN 在 Crossref /journals/<issn> 核过写法），大小写不敏感、& 与 and 等价。分层是人工判断的起点，不是权威排名 —— 改它不用改代码；名单是否够全，请本领域的人校一遍（见 docs/adr/0002-journal-tiers.md）。",
+  "version": 2,
   "general": {
     "A": [
       "American Economic Review",
-      "Quarterly Journal of Economics",
+      "The Quarterly Journal of Economics",
       "Journal of Political Economy",
       "Econometrica",
-      "Review of Economic Studies",
+      "The Review of Economic Studies",
       "American Economic Journal: Applied Economics",
       "American Economic Journal: Economic Policy",
       "American Economic Journal: Macroeconomics",
       "Journal of the European Economic Association",
-      "Review of Economics and Statistics",
-      "Economic Journal"
+      "The Review of Economics and Statistics",
+      "The Economic Journal"
     ],
     "B": [
       "Journal of Economic Perspectives",
@@ -26,98 +26,225 @@
       "Southern Economic Journal",
       "Economic Inquiry",
       "Journal of Economic Surveys",
-      "World Bank Economic Review"
+      "The World Bank Economic Review"
     ]
   },
   "domains": {
     "labor": {
       "label_zh": "劳动经济学",
-      "A": ["Journal of Labor Economics", "Journal of Human Resources", "ILR Review",
-            "Labour Economics", "Journal of Population Economics"],
-      "B": ["Journal of Human Capital", "Industrial Relations", "British Journal of Industrial Relations",
-            "Journal of Economic Inequality", "Journal of Labor Research", "Work, Employment and Society"]
+      "A": [
+        "Journal of Labor Economics",
+        "Journal of Human Resources",
+        "ILR Review",
+        "Labour Economics",
+        "Journal of Population Economics"
+      ],
+      "B": [
+        "Journal of Human Capital",
+        "Industrial Relations: A Journal of Economy and Society",
+        "British Journal of Industrial Relations",
+        "The Journal of Economic Inequality",
+        "Journal of Labor Research",
+        "Work, Employment and Society"
+      ]
     },
     "behavioral": {
       "label_zh": "行为与实验经济学",
-      "A": ["Experimental Economics", "Journal of Risk and Uncertainty", "Games and Economic Behavior",
-            "Journal of Economic Behavior & Organization"],
-      "B": ["Journal of Behavioral and Experimental Economics", "Journal of the Economic Science Association",
-            "Journal of Economic Psychology", "Theory and Decision", "Judgment and Decision Making",
-            "Journal of Experimental Social Psychology"]
+      "A": [
+        "Experimental Economics",
+        "Journal of Risk and Uncertainty",
+        "Games and Economic Behavior",
+        "Journal of Economic Behavior & Organization"
+      ],
+      "B": [
+        "Journal of Behavioral and Experimental Economics",
+        "Journal of the Economic Science Association",
+        "Journal of Economic Psychology",
+        "Theory and Decision",
+        "Judgment and Decision Making",
+        "Journal of Experimental Social Psychology"
+      ]
     },
     "energy-env": {
       "label_zh": "能源与环境经济学",
-      "A": ["Journal of Environmental Economics and Management",
-            "Journal of the Association of Environmental and Resource Economists",
-            "Review of Environmental Economics and Policy", "Energy Economics", "Land Economics"],
-      "B": ["Environmental and Resource Economics", "Resource and Energy Economics", "Energy Policy",
-            "Climate Change Economics", "Ecological Economics", "Journal of Environmental Management",
-            "American Journal of Agricultural Economics"]
+      "A": [
+        "Journal of Environmental Economics and Management",
+        "Journal of the Association of Environmental and Resource Economists",
+        "Review of Environmental Economics and Policy",
+        "Energy Economics",
+        "Land Economics"
+      ],
+      "B": [
+        "Environmental and Resource Economics",
+        "Resource and Energy Economics",
+        "Energy Policy",
+        "Climate Change Economics",
+        "Ecological Economics",
+        "Journal of Environmental Management",
+        "American Journal of Agricultural Economics"
+      ]
     },
     "development": {
       "label_zh": "发展经济学与田野实验",
-      "A": ["Journal of Development Economics", "World Development", "Journal of Economic Growth"],
-      "B": ["Economic Development and Cultural Change", "Journal of Development Studies",
-            "Review of Development Economics", "Oxford Development Studies",
-            "World Bank Research Observer", "Journal of African Economies"]
+      "A": [
+        "Journal of Development Economics",
+        "World Development",
+        "Journal of Economic Growth"
+      ],
+      "B": [
+        "Economic Development and Cultural Change",
+        "Journal of Development Studies",
+        "Review of Development Economics",
+        "Oxford Development Studies",
+        "The World Bank Research Observer",
+        "Journal of African Economies"
+      ]
     },
     "public": {
       "label_zh": "公共经济学与政策评估",
-      "A": ["Journal of Public Economics", "Journal of Health Economics", "National Tax Journal"],
-      "B": ["Public Finance Review", "Fiscal Studies", "International Tax and Public Finance",
-            "Journal of Pension Economics and Finance", "Health Economics", "Journal of Policy Analysis and Management"]
+      "A": [
+        "Journal of Public Economics",
+        "Journal of Health Economics",
+        "National Tax Journal"
+      ],
+      "B": [
+        "Public Finance Review",
+        "Fiscal Studies",
+        "International Tax and Public Finance",
+        "Journal of Pension Economics and Finance",
+        "Health Economics",
+        "Journal of Policy Analysis and Management"
+      ]
     },
     "industrial-organization": {
       "label_zh": "产业组织与规制",
-      "A": ["RAND Journal of Economics", "Journal of Industrial Economics", "Journal of Law and Economics",
-            "International Journal of Industrial Organization"],
-      "B": ["Journal of Economics & Management Strategy", "Review of Industrial Organization",
-            "Journal of Regulatory Economics", "Journal of Competition Law & Economics",
-            "Journal of Antitrust Enforcement", "Journal of Industry, Competition and Trade"]
+      "A": [
+        "The RAND Journal of Economics",
+        "Journal of Industrial Economics",
+        "Journal of Law and Economics",
+        "International Journal of Industrial Organization"
+      ],
+      "B": [
+        "Journal of Economics & Management Strategy",
+        "Review of Industrial Organization",
+        "Journal of Regulatory Economics",
+        "Journal of Competition Law & Economics",
+        "Journal of Antitrust Enforcement",
+        "Journal of Industry, Competition and Trade"
+      ]
     },
     "trade-spatial": {
       "label_zh": "国际贸易与空间经济",
-      "A": ["Journal of International Economics", "Journal of Urban Economics", "Journal of Economic Geography"],
-      "B": ["Review of International Economics", "Regional Science and Urban Economics",
-            "Journal of Regional Science", "The World Economy", "Journal of Comparative Economics",
-            "Papers in Regional Science", "Review of World Economics"]
+      "A": [
+        "Journal of International Economics",
+        "Journal of Urban Economics",
+        "Journal of Economic Geography"
+      ],
+      "B": [
+        "Review of International Economics",
+        "Regional Science and Urban Economics",
+        "Journal of Regional Science",
+        "World Economy",
+        "Journal of Comparative Economics",
+        "Papers in Regional Science",
+        "Review of World Economics"
+      ]
     },
     "macro-finance": {
       "label_zh": "宏观经济学与金融",
-      "A": ["Journal of Monetary Economics", "Journal of Finance", "Journal of Financial Economics",
-            "Review of Financial Studies", "Journal of Money, Credit and Banking"],
-      "B": ["Journal of Financial Intermediation", "Journal of Banking & Finance", "Review of Finance",
-            "Journal of Economic Dynamics and Control", "Macroeconomic Dynamics",
-            "Journal of International Money and Finance", "Journal of Macroeconomics"]
+      "A": [
+        "Journal of Monetary Economics",
+        "Journal of Finance",
+        "Journal of Financial Economics",
+        "Review of Financial Studies",
+        "Journal of Money, Credit and Banking"
+      ],
+      "B": [
+        "Journal of Financial Intermediation",
+        "Journal of Banking & Finance",
+        "Review of Finance",
+        "Journal of Economic Dynamics and Control",
+        "Macroeconomic Dynamics",
+        "Journal of International Money and Finance",
+        "Journal of Macroeconomics"
+      ]
     },
     "economic-history": {
       "label_zh": "经济史与史料",
-      "A": ["Journal of Economic History", "Explorations in Economic History", "Economic History Review",
-            "European Review of Economic History"],
-      "B": ["Cliometrica", "Financial History Review", "Business History Review", "Social Science History",
-            "Journal of Interdisciplinary History", "Australian Economic History Review"]
+      "A": [
+        "The Journal of Economic History",
+        "Explorations in Economic History",
+        "The Economic History Review",
+        "European Review of Economic History"
+      ],
+      "B": [
+        "Cliometrica",
+        "Financial History Review",
+        "The Business History Review",
+        "Social Science History",
+        "Journal of Interdisciplinary History",
+        "Australian Economic History Review"
+      ]
     },
     "theory": {
       "label_zh": "理论建模与机制设计",
-      "A": ["Journal of Economic Theory", "Theoretical Economics", "Games and Economic Behavior",
-            "Review of Economic Design"],
-      "B": ["Economic Theory", "Journal of Mathematical Economics", "Social Choice and Welfare",
-            "International Journal of Game Theory", "Journal of Mechanism and Institution Design",
-            "B.E. Journal of Theoretical Economics"]
+      "A": [
+        "Journal of Economic Theory",
+        "Theoretical Economics",
+        "Games and Economic Behavior",
+        "Review of Economic Design"
+      ],
+      "B": [
+        "Economic Theory",
+        "Journal of Mathematical Economics",
+        "Social Choice and Welfare",
+        "International Journal of Game Theory",
+        "Journal of Mechanism and Institution Design",
+        "The B E Journal of Theoretical Economics"
+      ]
     },
     "education": {
       "label_zh": "教育经济学",
-      "A": ["Economics of Education Review", "Journal of Human Capital", "Journal of Human Resources"],
-      "B": ["Education Economics", "Economics of Education", "British Educational Research Journal",
-            "Journal of Research on Educational Effectiveness", "Educational Evaluation and Policy Analysis"]
+      "A": [
+        "Economics of Education Review",
+        "Journal of Human Capital",
+        "Journal of Human Resources"
+      ],
+      "B": [
+        "Education Economics",
+        "Economics of Education Review",
+        "British Educational Research Journal",
+        "Journal of Research on Educational Effectiveness",
+        "Educational Evaluation and Policy Analysis"
+      ]
     },
     "health": {
       "label_zh": "健康经济学",
-      "A": ["Journal of Health Economics", "Health Economics", "American Journal of Health Economics"],
-      "B": ["Health Policy", "Social Science & Medicine", "Medical Care", "European Journal of Health Economics",
-            "Journal of Health Economics and Outcomes Research", "Health Services Research"]
+      "A": [
+        "Journal of Health Economics",
+        "Health Economics",
+        "American Journal of Health Economics"
+      ],
+      "B": [
+        "Health Policy",
+        "Social Science & Medicine",
+        "Medical Care",
+        "The European Journal of Health Economics",
+        "Journal of Health Economics and Outcomes Research",
+        "Health Services Research"
+      ]
     }
   },
-  "working_paper_doi_prefixes": ["10.2139/", "10.3386/", "10.17848/", "10.1596/"],
-  "working_paper_venues": ["SSRN Electronic Journal", "NBER Working Paper", "CEPR Discussion Paper"]
+  "working_paper_doi_prefixes": [
+    "10.2139/",
+    "10.3386/",
+    "10.17848/",
+    "10.1596/"
+  ],
+  "working_paper_venues": [
+    "SSRN Electronic Journal",
+    "NBER Working Paper",
+    "CEPR Discussion Paper"
+  ],
+  "_verified": "2026-11-05：142 个刊名逐个查 Crossref，写法已改为官方 container-title；分层未机器核验。"
 }

@@ -126,9 +126,9 @@
     },
     {
       "id": "G3",
-      "name": "中文期刊表图规范只实测了《季刊》《数量》两本",
-      "name_en": "Chinese journal table rules measured on two journals only",
-      "status": "open"
+      "name": "中文期刊表图规范只实测了两本（《经济学（季刊）》《数量经济技术经济研究》），用户已确认够用，关闭",
+      "name_en": "Chinese journal table rules measured on two journals; the user confirmed these two are enough, so this is closed",
+      "status": "closed"
     },
     {
       "id": "G4",
@@ -145,7 +145,10 @@
     {
       "id": "G6",
       "text": "期刊分层 journals.json 是首版，A/B 名单没经过领域里的人校读",
-      "text_en": "journals.json is a first pass; the A/B lists have not been reviewed by a field expert"
+      "text_en": "journals.json is a first pass; the A/B lists have not been reviewed by a field expert",
+      "status": "partial",
+      "name": "期刊分层 journals.json：142 个刊名已于 2026-11-05 逐条对 Crossref 核过写法（135 个名字精确一致、7 个用 ISSN 核、错配 0），但 A/B 分层仍是人工判断，待领域内人校",
+      "name_en": "journals.json: all 142 journal names were verified against Crossref on 2026-11-05 (135 exact title matches, 7 confirmed by ISSN, 0 mismatches); the A/B tiers are still a human judgement and need a field expert"
     }
   ],
   "decisions": [
