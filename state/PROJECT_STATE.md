@@ -1,7 +1,7 @@
 # 项目状态
 
 ## 上次停在
-D1 发版完成：v0.3.9 已推上两仓，八个脚本结成一条链（preflight → spec → gate → 各段模板 → review → recall）。
+D1 发版完成：v0.3.9 已推上两仓，八个脚本结成一条链（preflight、spec、gate、各段模板、review、recall 依次相接）。
 
 ## 下一步
 没有硬性待办。按价值排三件：
