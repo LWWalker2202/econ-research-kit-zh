@@ -839,6 +839,8 @@ def main(argv=None):
                     help="the research project directory holding .econ-kit/ (default: cwd)")
     ap.add_argument("--html", default=None, help="write a single-file dashboard here")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--json-out", default=None,
+                    help="also write the same JSON here (the in-app panel reads this file)")
     a = ap.parse_args(argv)
 
     root = os.path.abspath(a.root)
@@ -851,10 +853,21 @@ def main(argv=None):
     project = os.path.abspath(a.project)
     board = collect(root, out_dir, a.lang, project)
 
-    if a.json:
+    if a.json or a.json_out:
         slim = dict(board)
         slim.pop("labels", None)
-        print(json.dumps(slim, ensure_ascii=False, indent=2))
+        text = json.dumps(slim, ensure_ascii=False, indent=2)
+        if a.json:
+            print(text)
+        if a.json_out:
+            target = os.path.abspath(a.json_out)
+            parent = os.path.dirname(target)
+            if parent and not os.path.isdir(parent):
+                os.makedirs(parent)
+            with io.open(target, "w", encoding="utf-8", newline="\n") as f:
+                f.write(text + "\n")
+            if not a.json:
+                print("wrote %s (%d bytes)" % (target, os.path.getsize(target)))
         return 0
 
     if a.html:

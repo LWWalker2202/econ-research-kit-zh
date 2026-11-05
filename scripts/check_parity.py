@@ -34,7 +34,7 @@ except Exception:
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 
-SKIP_DIRS = {".git", "__pycache__", ".idea", ".vscode", "node_modules", "output", "cache", "local"}
+SKIP_DIRS = {".git", ".econ-kit", "__pycache__", ".idea", ".vscode", "node_modules", "output", "cache", "local"}
 BYTE_IDENTICAL = ["VERSION", "glossary.yaml", "index/actions.csv"]
 # the project ledger and the decision log are language-neutral: they must match byte for byte
 BYTE_IDENTICAL_PREFIX = ["state/", "decisions/"]
