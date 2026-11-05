@@ -67,8 +67,8 @@ STAGES = [
         "no": 1,
         "zh": "问题与文献",
         "en": "Question and literature",
-        "auto_zh": "自动 7 项：python skills/literature/templates/check_matrix.py 你的文献矩阵.csv",
-        "auto_en": "Seven mechanical checks: python skills/literature/templates/check_matrix.py your-matrix.csv",
+        "auto_zh": "自动 7 项：python skills/literature/templates/check_matrix.py 你的文献矩阵.csv；要联网先跑一遍检索：python skills/literature/templates/litsearch.py \"关键词\" --min-tier A",
+        "auto_en": "Seven mechanical checks: python skills/literature/templates/check_matrix.py your-matrix.csv; for an online first pass: python skills/literature/templates/litsearch.py \"keywords\" --min-tier A",
         "cmd": "python skills/literature/templates/check_matrix.py <matrix.csv>",
         "items": [
             (

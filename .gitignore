@@ -33,3 +33,6 @@ cache/
 local/
 *.log
 
+# Gate state is per project, not part of the kit.
+.econ-kit/
+

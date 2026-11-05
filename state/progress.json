@@ -1,0 +1,160 @@
+{
+  "about": "经济学实证研究的动作库：八道工序、十二个领域、可跑的金样与检查器，外加一本配套手册。",
+  "about_en": "A workflow kit for empirical economics: eight stages, twelve fields, runnable checks and golden outputs.",
+  "version": "0.3.9-dev",
+  "released": "v0.3.8",
+  "released_at": "2026-11-05",
+  "repos": {
+    "econ-research-kit": "e60cb8f",
+    "econ-research-kit-zh": "1d24a21"
+  },
+  "updated_at": "2026-11-05",
+  "steps": [
+    {
+      "id": "A1",
+      "name": "litsearch.py：Crossref 检索 + OpenAlex 按 DOI 补摘要/被引/OA，去重与重排，--from-file 可重放，--verify 核 DOI",
+      "name_en": "litsearch.py: Crossref search + OpenAlex enrichment, dedupe, replayable, DOI verifier",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "skills/literature/templates/litsearch.py",
+        "skills/literature/expected/search-snapshot.json",
+        "skills/literature/expected/lit-hits.md"
+      ]
+    },
+    {
+      "id": "B1",
+      "name": "recall.py：一条命令打印项目现状、上一步产出、未完成项（治“我忘了自己答应过什么”）",
+      "name_en": "recall.py: one command that prints where the project stands",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "scripts/recall.py",
+        "state/progress.json",
+        "state/PROJECT_STATE.md"
+      ]
+    },
+    {
+      "id": "B2",
+      "name": "review.py：每步结束跑三类复查（机器校验/账本核对/反查丢失），不过不许进下一步",
+      "name_en": "review.py: three-way review at the end of every step",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "scripts/review.py"
+      ]
+    },
+    {
+      "id": "B3",
+      "name": "决策日志 decisions/ADR-0001：把“为什么这么做”写下来，防止两个月后重吵",
+      "name_en": "decisions/ADR-0001: the record of why",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "decisions/ADR-0001-gates-before-prose.md"
+      ]
+    },
+    {
+      "id": "A2",
+      "name": "期刊分层：journals.json（十二领域的 A/B 级刊）+ litsearch 的 --min-tier，顶刊优先",
+      "name_en": "Journal tiers: journals.json + litsearch --min-tier",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "skills/literature/journals.json",
+        "skills/literature/templates/litsearch.py"
+      ]
+    },
+    {
+      "id": "A3",
+      "name": "把 litsearch 接进账面：literature/SKILL.md 的步骤与验收、explain.py 第 1 段、手册第 4 章",
+      "name_en": "Wire litsearch into the ledger: SKILL.md, explain.py, manual chapter 4",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "skills/literature/SKILL.md",
+        "scripts/explain.py"
+      ]
+    },
+    {
+      "id": "C1",
+      "name": "spec.py：把一句模糊需求翻成提示词草稿给你改（漏掉的那一环）",
+      "name_en": "spec.py: translate a vague request into a prompt draft you can edit",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "scripts/spec.py"
+      ]
+    },
+    {
+      "id": "C2",
+      "name": "gate.py：每步停下来等确认，没回答不许往下走（现在是文档约定，不是机制）",
+      "name_en": "gate.py: stop and wait at every stage",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "scripts/gate.py"
+      ]
+    },
+    {
+      "id": "C3",
+      "name": "workflows/main.yaml：八段主线带交接契约（requires / produces）",
+      "name_en": "workflows/main.yaml: the eight-stage line with contracts",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "workflows/main.yaml"
+      ]
+    },
+    {
+      "id": "D1",
+      "name": "v0.3.9 发版：校验、提交推送、打包、Release 六附件、文档升版",
+      "name_en": "Release v0.3.9",
+      "status": "todo",
+      "at": "",
+      "artifacts": [
+        "VERSION"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "id": "G1",
+      "name": "手册第 4 章没跟上 v0.3.8/v0.3.9（缺文献检索那一节）",
+      "name_en": "Manual chapter 4 lags behind v0.3.8/v0.3.9",
+      "status": "open"
+    },
+    {
+      "id": "G2",
+      "name": "Codex 插件只登记进 config.toml，没在插件页实机验证过",
+      "name_en": "Codex plugin installed into config.toml but never verified in the UI",
+      "status": "open"
+    },
+    {
+      "id": "G3",
+      "name": "中文期刊表图规范只实测了《季刊》《数量》两本",
+      "name_en": "Chinese journal table rules measured on two journals only",
+      "status": "open"
+    },
+    {
+      "id": "G4",
+      "name": "249 处 [待填] 没做过分派（哪些该由作者填、哪些该由脚本填）",
+      "name_en": "249 to-fill markers never triaged",
+      "status": "open"
+    },
+    {
+      "id": "G5",
+      "name": "表图与报告两道机检只查形式，不查“这张表回答的问题对不对”（这层只能靠人闸门）",
+      "name_en": "Table and report checks are structural only; the semantic layer needs a human gate",
+      "status": "open"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "ADR-0001",
+      "title": "把规矩做成会挡路的脚本，而不是写在文档里",
+      "title_en": "Turn the rules into scripts that block, not prose that advises",
+      "file": "decisions/ADR-0001-gates-before-prose.md"
+    }
+  ]
+}

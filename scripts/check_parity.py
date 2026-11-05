@@ -36,6 +36,11 @@ REPO = os.path.dirname(HERE)
 
 SKIP_DIRS = {".git", "__pycache__", ".idea", ".vscode", "node_modules", "output", "cache", "local"}
 BYTE_IDENTICAL = ["VERSION", "glossary.yaml", "index/actions.csv"]
+# the project ledger and the decision log are language-neutral: they must match byte for byte
+BYTE_IDENTICAL_PREFIX = ["state/", "decisions/"]
+# These two are prose, not data: each repo writes its own language, so only the heading
+# structure is compared (they are handled like any other markdown file).
+PROSE_IN_STATE = ["state/PROJECT_STATE.md", "decisions/README.md"]
 
 SKILL_EN = [
     "When to use this", "Inputs", "Procedure", "Outputs (artifacts)",
@@ -188,6 +193,12 @@ def main() -> int:
             if sha(files_en[path]) != sha(files_zh[path]):
                 problems.append(f"not byte-identical: {path}")
     for path in common:
+        if path in PROSE_IN_STATE:
+            continue
+        if any(path.startswith(pre) for pre in BYTE_IDENTICAL_PREFIX):
+            if sha(files_en[path]) != sha(files_zh[path]):
+                problems.append(f"not byte-identical: {path}")
+            continue
         # scripts/ and the book PDFs are language-neutral: they must match byte for byte.
         # book/README.md is language-specific, so it is compared as markdown like the rest.
         if path.startswith("scripts/") or (path.startswith("book/") and path.endswith(".pdf")):

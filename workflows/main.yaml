@@ -1,0 +1,142 @@
+# 八段主线：每一步接住上一步的产物，再交出自己的产物
+#
+# 用法：这不是给人读的说明书，是给 agent 读的交接契约。
+#   - requires：进这一段之前，磁盘上必须已经有这些文件（拿不到就先回上游）
+#   - produces：这一段结束时必须写出的文件（缺一个就不算做完）
+#   - gate：这一段的确认问话；没有一句人给的回答，不许开下一段
+#   - on_missing：产物缺了怎么办（stop = 停下来问，back = 回上游补）
+#
+# 检查契约是否成立：python scripts/workflow_check.py
+# 看当前停在哪一段：python scripts/gate.py status
+
+version: 1
+id: main
+name_zh: 八段主线
+name_en: The eight-stage mainline
+entry: 0
+
+stages:
+  - id: 0
+    name_zh: 可行性
+    name_en: Feasibility
+    skill: feasibility
+    requires: []
+    produces:
+      - feasibility-memo.md
+      - feasibility-check.csv
+      - data-access-plan.md
+      - stop-criteria.md
+    gate_zh: 这题按这个分析单元和处理变量，你认为数据能拿到吗？哪一个最可能卡住？
+    gate_en: With this unit and this treatment, can the data actually be obtained? What breaks first?
+    on_missing: stop
+
+  - id: 1
+    name_zh: 问题与文献
+    name_en: Question and literature
+    skill: literature
+    requires:
+      - feasibility-memo.md
+    produces:
+      - search-plan.md
+      - lit-matrix.csv
+    gate_zh: 这个缺口陈述你认吗？审稿人说「已有文献做过类似的事」，你用哪一句回？
+    gate_en: Do you accept this gap statement? What is your one-line answer if a referee says it has been done?
+    on_missing: stop
+
+  - id: 2
+    name_zh: 识别设计
+    name_en: Identification
+    skill: identification
+    requires:
+      - lit-matrix.csv
+    produces:
+      - identification-memo.md
+      - threat-table.md
+    gate_zh: 这四条威胁里，哪一条你现在没法检验？确定带着它往下走吗？
+    gate_en: Which of these threats can you not test now? Are you carrying it deliberately?
+    on_missing: stop
+
+  - id: 3
+    name_zh: 数据
+    name_en: Data
+    skill: data-prep
+    requires:
+      - identification-memo.md
+    produces:
+      - cleaning-decisions.md
+      - cleaning-log.md
+    gate_zh: 这些清洗动作与变量口径，你认吗？哪一条要改？
+    gate_en: Do you accept these cleaning actions and variable definitions? Which one changes?
+    on_missing: stop
+
+  - id: 4
+    name_zh: 估计
+    name_en: Estimation
+    skill: estimation
+    requires:
+      - cleaning-log.md
+    produces:
+      - spec-ladder.md
+      - estimation-results.md
+    gate_zh: 报告的那一级设定就是这一级吗？显著性换口气的那一级怎么处理？
+    gate_en: Is this the rung you will report? What happens to the rung where significance changes?
+    on_missing: stop
+
+  - id: 5
+    name_zh: 表与图
+    name_en: Tables and figures
+    skill: tables-figures
+    requires:
+      - estimation-results.md
+    produces:
+      - table1.tex
+    gate_zh: 表里的星号、标准误层级、表注，按你目标期刊的习惯吗？
+    gate_en: Do the stars, standard-error level and notes match your target journal?
+    on_missing: stop
+
+  - id: 6
+    name_zh: 报告
+    name_en: Report
+    skill: report
+    requires:
+      - estimation-results.md
+      - table1.tex
+    produces:
+      - report.md
+    gate_zh: 报告里「还缺什么」那一段，和你心里想的一致吗？
+    gate_en: Does the "still missing" paragraph say what you actually think is missing?
+    on_missing: stop
+
+  - id: 7
+    name_zh: 写作
+    name_en: Writing
+    skill: writing
+    requires:
+      - report.md
+    produces:
+      - abstract.md
+    gate_zh: 摘要里识别策略那一句，是你愿意署名的说法吗？
+    gate_en: Is the identification sentence in the abstract something you will sign your name to?
+    on_missing: stop
+
+  - id: 8
+    name_zh: 审稿回复
+    name_en: Referee response
+    skill: review
+    requires:
+      - abstract.md
+    produces:
+      - response-matrix.md
+      - response-letter.md
+    gate_zh: 哪一条你决定不改？理由写清楚了吗？
+    gate_en: Which comment will you refuse? Is the reason written down?
+    on_missing: stop
+
+notes_zh: |
+  两条规矩。
+  一、requires 不是"建议先做"，是"没有它就不许进"。缺上游文件时唯一允许的动作是回上游，不是在本段就地编一个。
+  二、produces 里的文件是本段的唯一交付凭证；聊天记录不算，口头结论不算。
+notes_en: |
+  Two rules.
+  First, requires is not a suggestion: without the upstream file you may not enter the stage; the only allowed move is to go back upstream, never to invent it in place.
+  Second, the files under produces are the only proof the stage happened; chat history and verbal conclusions do not count.

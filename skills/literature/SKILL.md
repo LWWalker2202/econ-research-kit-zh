@@ -23,6 +23,7 @@ description: 文献工序——把「这个缺口是不是真的」写成可核�
 1. **先写检索方案，再去搜。** 跑 `python skills/literature/templates/search-plan.py "你的题目" --lang zh`（加 `--out` 可以指定路径）。它会写出 `search-plan.md`，里面有：三层关键词矩阵（构念 / 措施 / 结果，每层带同义词）、JEL 码候选、四条布尔检索串、纳入与排除标准。它留成 `[待填]` 的地方由你补；不要把第一稿当定稿。
 2. **至少在三个地方搜。** 已发表文献用 EconLit 或 Web of Science；工作论文用 NBER / CEPR / IZA；再用 Google Scholar 或 OpenAlex 查你最接近那两篇的**被引**。每一条检索串和它的命中数都记到 `search-plan.md` 末尾的检索记录表里。
 3. **一篇文章一行，把矩阵填满。** 从 `python skills/literature/templates/lit-matrix.md` 那六个列开始。**不允许只看摘要填一行**：打开文章，“研究设计”那一列要写它实际用的估计量或设计，不是“实证”“定量”。
+3b. **或者先让工具跑第一遍。** 跑 `python skills/literature/templates/litsearch.py "minimum wage youth employment" --top 20 --year-from 2000 --lang zh`：它查 Crossref，再用 OpenAlex 给每个 DOI 补摘要、被引数与开放获取链接，写出 `lit-hits.md`、`lit-hits.csv`、`lit-search.json`。加 `--min-tier A` 只留 `skills/literature/journals.json` 里列的 A 级刊；加 `--sort citations` 先看奠基作。`--from-file lit-search.json` 逐字节重放同一张表；`--verify lit-hits.csv` 把每个 DOI 重新解析一遍，标题对不上就报错退出。这一步要联网，匿名访问有速率限制（返回 429 是让你等，不是坏了）；第 1 步的检索方案离线也能写，而且进附录的是它。
 4. **标出最接近的那一篇。** 只能有一行 `closest = yes`。挑不出来，说明缺口还没锐到能写——回第 1 步。
 5. **缺口用一句话写，并且点名行号。** 形状是“第 3、7、11 行都在估 X 对 Y 的影响，但没有一篇能把 M 分离出来，因为……”，不是“相关研究较少”。不点名行号的缺口句是许愿。
 6. **先跑机检，再把矩阵读一遍。** `python skills/literature/templates/check_matrix.py lit-matrix.csv --lang zh` 查的是格式与齐全度。它**不查**这篇文章存不存在、也不查你读没读——那是你的活，见验收第 7 条。
@@ -33,6 +34,7 @@ description: 文献工序——把「这个缺口是不是真的」写成可核�
 - `lit-matrix.csv` —— 六列矩阵，一篇文章一行，恰好一行标 `closest`。
 - `lit-matrix-check.txt` —— 检查器的输出，和矩阵放在一起。
 - 一句缺口话 —— 之后写进 `identification-memo.md`，作为“为什么这是新的”那一行。
+- 如果用了联网检索：`lit-hits.md`、`lit-hits.csv`、`lit-search.json` 与追加写的 `search-log.csv`，和矩阵放在一起，作为“机器找到什么、你留下什么”的记录。
 
 ## 验收
 
@@ -42,6 +44,7 @@ description: 文献工序——把「这个缺口是不是真的」写成可核�
 - [ ] 每一行的结论都写了方向或幅度；只写“显著”不合格。
 - [ ] 恰好一行 `closest = yes`，并且你能用一句话说清为什么是它。
 - [ ] 缺口句里至少点了两个行号。
+- [ ] 如果用了 `litsearch.py`，留下的每一行至少读到摘要；删掉的命中仍能在 `lit-hits.md` 里看见（不留痕地删文献，正是“凑出来的缺口”诞生的方式）。
 - [ ] 矩阵里每一篇你都亲自打开过。只从别人引文里看到的，标 `[待核实]` 并且不许写进稿子。
 
 ## 常见失败模式
@@ -61,5 +64,8 @@ description: 文献工序——把「这个缺口是不是真的」写成可核�
 - 并行：`data-prep`（某篇的数据源正是你的候选时）、`writing`（引言里缺口那几句怎么措辞）。
 
 ## 领域细节去哪查
+
+`--min-tier` 用的期刊分层写在 `skills/literature/journals.json`：十二个方向、A/B 两级刊、工作论文 DOI 前缀。改这个文件就能让检索偏向你所在领域真正认可的刊，不用改代码。
+
 
 某个方向的经典文献、测量惯例、审稿人会问什么，在 `domains/<方向>/institutional.md`、`measures.md`、`pitfalls.md` 里。数据源不在 `data-dict/` 里的，先读 `data-dict/README.md`：它告诉你这个源到底要不要建条目。

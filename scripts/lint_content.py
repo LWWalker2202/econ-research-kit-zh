@@ -24,6 +24,7 @@ EMOJI = re.compile(
     "[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF"
     "\U00002190-\U000021FF\U00002B00-\U00002BFF]"
 )
+DOI = re.compile(r"10\.\d{4,9}/[^\s)|<>\"]+")
 VERSION_NUMBER = re.compile(r"\b\d+\.\d+\.\d+\b")
 BANNED = [
     "根据具体情况调整", "注意数据质量", "根据需要调整", "视情况而定",
@@ -114,10 +115,20 @@ def main() -> int:
             # version numbers (software versions age badly). Catalog ids such as
             # 1.6.1 look like versions but are indexing numbers, and they are
             # confined to the meta files that start with an underscore.
+            # DOIs also look like versions (10.1080/13504851.2013.799752), so any
+            # line carrying a DOI is exempt.
             for m in VERSION_NUMBER.finditer(body):
                 if own_version and m.group(0) == own_version:
                     continue
                 if rel.startswith("data-dict/_"):
+                    continue
+                # the ledger and the decision log quote version numbers on purpose
+                if rel.startswith("state/") or rel.startswith("decisions/"):
+                    continue
+                line_start = body.rfind("\n", 0, m.start()) + 1
+                line_end = body.find("\n", m.end())
+                line = body[line_start:line_end if line_end != -1 else len(body)]
+                if DOI.search(line):
                     continue
                 problems.append(f"{rel}: version number {m.group(0)!r} — do not pin versions")
 

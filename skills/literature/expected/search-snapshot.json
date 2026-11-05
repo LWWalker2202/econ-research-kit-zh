@@ -1,0 +1,115 @@
+{
+  "query": "minimum wage youth employment",
+  "mailto": "2764002263@qq.com",
+  "generated": "2026-11-05T19:00:00",
+  "records": [
+    {
+      "doi": "10.2139/ssrn.7207426",
+      "title": "Minimum Wage Policy and Youth Employment in Canada: A Machine Learning Approach",
+      "authors": [
+        "Jinlin Liu",
+        "Tian Jin"
+      ],
+      "year": 2026,
+      "venue": "Elsevier BV",
+      "type": "posted-content",
+      "cited_by": 0,
+      "abstract": "It was the common consensus among economists that price floors would inevitably result in a surplus of supply, and lead to a lower rate of demand of whatever goods are supplied. As a result, minimum wage policy, a form of price floors in the labour market, has often been viewed as a detriment towards employment rate. The revolutionary, Nobel prize-winning, paper published in 1994 by David Card and Alan B. Krueger offered unique perspectives that contradicted the proposed model of traditional economics. The study concluded that there is no indication that a rise in minimum wage reduced employment. This paper will explore the causal effect between minimum wage policies on youth employment rate by using the public data available at the government of Canada. This paper aims to demonstrate a more quantified trend regarding the relationship between minimum wage and youth employment rate. By using machine learning techniques including neural networks and random forests, this study investigates the in-depth mechanisms of how minimum wage affects different variables that further contributes to the variations in employment rates. This machine-learning based approach allows for a more quantified and generalized data trend between minimum wage and youth employment and allows for an optimal minimum wage policy for future government decisions.",
+      "oa_url": "https://doi.org/10.2139/ssrn.7207426",
+      "pdf_url": "",
+      "landing": "https://doi.org/10.2139/ssrn.7207426",
+      "source": "crossref+openalex",
+      "_score": 5.0
+    },
+    {
+      "doi": "10.1177/0019793919897914",
+      "title": "Happy Birthday, You’re Fired! Effects of an Age-Dependent Minimum Wage on Youth Employment Flows in the Netherlands",
+      "authors": [
+        "Jan Kabátek"
+      ],
+      "year": 2021,
+      "venue": "ILR Review",
+      "type": "journal-article",
+      "cited_by": 21,
+      "abstract": "The Dutch minimum wage for workers aged 15 to 23 is defined as a stepwise increasing function of a worker’s calendar age. Using Dutch administrative records, the author shows that the birthday discontinuities of age-dependent minimum wage rates affect both labor market entry (job accessions) and labor market exit (job separations) of minimum wage workers. The job separations spike in the three months that precede workers’ birthdays, suggesting that firms are dismissing workers whose costs are about to go up. The frequency of job accessions increases immediately after the birthdays and the increase is sustained throughout the following months. The resulting effect on employment levels is dynamic, with the employment rate being subject to an initial drop that is gradually compensated for by the higher rates of post-birthday labor market entry.",
+      "oa_url": "https://doi.org/10.2139/ssrn.2705231",
+      "pdf_url": "",
+      "landing": "https://doi.org/10.1177/0019793919897914",
+      "source": "crossref+openalex",
+      "_score": 4.618208490671663
+    },
+    {
+      "doi": "10.1080/13504851.2013.799752",
+      "title": "Minimum wage effects on youth employment in the European Union",
+      "authors": [
+        "S. Laporšek"
+      ],
+      "year": 2013,
+      "venue": "Applied Economics Letters",
+      "type": "journal-article",
+      "cited_by": 21,
+      "abstract": "The purpose of this article is to estimate minimum wage effects on youth employment in the European Union (EU). The analysis employs a panel regression method with fixed effects and uses data for 18 EU member states with statutory minimum wage over the period 1996 to 2011. The analysis is restricted to teenage workers between 15 and 19 years of age and young workers between 20 and 24 years of age. The study finds a negative, statistically significant impact of minimum wage on youth employment, by which the disemployment effect appears to be stronger for teenage workers. The effect remains negative and statistically significant also when controlled for other labour market institutions. Taking into account empirical results, we can conclude that EU countries should be more cautious when setting up minimum wages for young workers, as disemployment effects may have been downplayed.",
+      "oa_url": "",
+      "pdf_url": "",
+      "landing": "https://doi.org/10.1080/13504851.2013.799752",
+      "source": "crossref+openalex",
+      "_score": 3.9515418240049964
+    },
+    {
+      "doi": "10.1080/0376835x.2018.1552556",
+      "title": "How might a national minimum wage affect the employment of youth in South Africa?",
+      "authors": [
+        "Leila Patel",
+        "Zoheb Khan",
+        "Thomas Englert"
+      ],
+      "year": 2020,
+      "venue": "Development Southern Africa",
+      "type": "journal-article",
+      "cited_by": 24,
+      "abstract": "Labour market policies such as National Minimum Wages (NMW) are widely used in different countries to reduce poverty and inequality. Given the high and rising rate of youth unemployment in South Africa, we ask the question: how might a NMW affect the labour market outcomes of employed and unemployed youth? The perspectives of employed and unemployed youth aged 18–25 years were solicited through focus group discussions in five provinces. The findings suggest that a NMW could benefit youth engaged in formal employment, it could stimulate job-seeking for discouraged work seekers and is unlikely to crowd out investments in further education. However, the vast majority of unemployed youth will probably not benefit from a NMW. This is due to the multiple and complex needs of disadvantaged youth. Other social interventions are needed to address the youth unemployment crisis.",
+      "oa_url": "https://doi.org/10.1080/0376835x.2018.1552556",
+      "pdf_url": "https://www.tandfonline.com/doi/pdf/10.1080/0376835X.2018.1552556?needAccess=true&role=button",
+      "landing": "https://doi.org/10.1080/0376835x.2018.1552556",
+      "source": "crossref+openalex",
+      "_score": 3.7104418316403067
+    },
+    {
+      "doi": "10.1080/00128775.2020.1816474",
+      "title": "Minimum Wage and Youth Employment in Regions of the Visegrád Countries",
+      "authors": [
+        "Kamila Fialová",
+        "Martina Mysíková"
+      ],
+      "year": 2021,
+      "venue": "Eastern European Economics",
+      "type": "journal-article",
+      "cited_by": 12,
+      "abstract": "This paper estimates the youth employment effects of minimum wages in the Visegrád countries: Czechia, Hungary, Poland, and Slovakia. The analyses are based on a regional panel dataset for the period 2003–16. Our results indicate that changes in minimum wages measured as a ratio of regional average wages have not negatively affected youth employment rates in the Visegrád countries at the national level. Detailed analyses indicate that changes in the ratio of minimum to average wages may have dampened regional youth employment in Hungary in 2008–11, in Czechia in 2003–7, and in several regions in Poland and Slovakia throughout the full sample period.",
+      "oa_url": "",
+      "pdf_url": "",
+      "landing": "https://doi.org/10.1080/00128775.2020.1816474",
+      "source": "crossref+openalex",
+      "_score": 3.6463232048256407
+    },
+    {
+      "doi": "10.1111/apel.12427",
+      "title": "Is a single minimum wage policy viable option? Evidence from the impact of minimum wage on youth employment in Malaysia",
+      "authors": [
+        "Hazrul Shahiri",
+        "Zulkifly Osman",
+        "Mukhriz Izraf Azman Aziz"
+      ],
+      "year": 2025,
+      "venue": "Asian-Pacific Economic Literature",
+      "type": "journal-article",
+      "cited_by": 1,
+      "abstract": "The present study is aimed to identify an ideal mechanism to reduce negative effect of minimum wage on youth employment generation. Using available data from Department of Statistics, the study runs an annual panel regression at the state level based on fixed effect specification model. The finding demonstrates that the minimum wage has a negative effect on employment, particularly among youth. It implies that there is an excess of labour supply in the market at the current wage rate. As a result, the rate set is higher than equilibrium, signifying firm disadvantages. The negative effect is more prevalent if the single national minimum wage rate policy is applied to all states. Therefore, the national wage policy should be thoroughly examined. Instead, a regional wage rate should be explored as a potential solution for mitigating and preventing negative employment effects.",
+      "oa_url": "",
+      "pdf_url": "",
+      "landing": "https://doi.org/10.1111/apel.12427",
+      "source": "crossref+openalex",
+      "_score": 3.638629436111989
+    }
+  ]
+}
