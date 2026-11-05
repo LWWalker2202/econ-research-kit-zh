@@ -57,6 +57,7 @@ description: 搭一条可复现的报告流水线：从原始数据到中间产�
 
 - [ ] 从干净检出出发，一条命令重建中间数据、表、图与两份报告，无手工步骤。
 - [ ] 报告正文里没有直接手打的数字，每个引用值都能从 `report/values.json` 解析。
+- [ ] `python skills/report/templates/check_report.py report.md --results report/values.json` 打到 8/8：正文里每个小数都能在结果文件里找到。
 - [ ] 构建前后 `data/raw/` 下文件的哈希不变。
 - [ ] 中英两份报告里每个共同表图的取值相同。
 - [ ] 清空 `output/` 后渲染，零警告通过。

@@ -2,7 +2,7 @@
 
 一套**按工序分好的经济学实证研究工具包**：从"这个题目能不能做"，到"跑回归"，到"出一张三线表"，到"写报告"，到"回审稿意见"，一共八道工序。每一道工序要么给你一个能直接跑的模板（跑完跟标准答案比对），要么给你一个检查器（把你写好的东西丢进去，它逐条挑毛病）。
 
-**版本 0.3.9** ｜ 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 自动比对
+**版本 0.3.10** ｜ 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 自动比对
 
 > 第一次来？直接跳到「第一步」。不用先弄懂这个仓库为什么长这样。
 
@@ -118,6 +118,17 @@ python scripts\check_parity.py
 | `teaching/` | 本科、硕士、博士三档各怎么用这个库 |
 | `book/` | 配套小册子（第一版存档）的读法说明 |
 | `glossary.yaml` | 术语对照表：中文怎么叫、英文怎么叫、哪个是强制统一的写法 |
+
+## 一页看清现在在哪
+
+```
+python scripts/dashboard.py
+python scripts/dashboard.py --html dashboard.html
+```
+
+第一条打印四件事：项目停在哪一段、下一段会问什么、每道检查器过了几项、清洗把样本挪了多少行。第二条把同一页写成单文件 HTML（内联样式与内联图，不联网、不加载脚本），可以直接发给同门，也可以放进组会幻灯片。
+
+它只读三处已经存在的东西：`state/progress.json`、你研究项目里的 `.econ-kit/gate.json`、以及可跑脚本写进 `output/` 的文件。没有一处要重复填。
 
 ## 八道工序：我卡在哪儿，就去哪一道
 

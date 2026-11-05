@@ -1,7 +1,7 @@
 {
   "about": "经济学实证研究的动作库：八道工序、十二个领域、可跑的金样与检查器，外加一本配套手册。",
   "about_en": "A workflow kit for empirical economics: eight stages, twelve fields, runnable checks and golden outputs.",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "released": "v0.3.9",
   "released_at": "2026-11-05",
   "repos": {
@@ -114,6 +114,16 @@
       "at": "2026-11-05",
       "artifacts": [
         "VERSION"
+      ]
+    },
+    {
+      "id": "D2",
+      "name": "dashboard.py：一页看清现在在哪、接下来做什么、检查器过几项、清洗动了几行；--html 出单文件看板",
+      "name_en": "dashboard.py: one page for where you are, what comes next, checker pass rates and cleaning movement; --html for a single-file board",
+      "status": "done",
+      "at": "2026-11-05",
+      "artifacts": [
+        "scripts/dashboard.py"
       ]
     }
   ],
