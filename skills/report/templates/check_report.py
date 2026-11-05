@@ -34,7 +34,7 @@ TEXT = {
         "ok": "OK",
         "weak": "WEAK",
         "missing": "MISSING",
-        "passed": "{n}/7 checks passed",
+        "passed": "{n}/{total} checks passed",
         "note": "{n} placeholder(s) still to fill",
         "checks": [
             "the six required sections are all present",
@@ -44,6 +44,7 @@ TEXT = {
             "data and definitions lists at least three fields",
             "reproduction names a seed and the input files",
             "what is still missing lists at least one item",
+            "every decimal in the prose appears in the results file",
         ],
         "d_sections": "six sections found",
         "d_sections_bad": "missing section(s): {names}",
@@ -61,6 +62,9 @@ TEXT = {
         "d_repro_inputs": "no input file recorded",
         "d_missing": "{n} open items",
         "d_missing_bad": "no open items listed",
+        "d_numbers": "{n} numbers matched",
+        "d_numbers_bad": "{m} of {n} numbers are not in the results file: {items}",
+        "d_no_numbers": "the prose carries no decimal, so there is nothing to reconcile",
         "None": "nothing",
         "coef": "a coefficient",
         "se": "a standard error",
@@ -71,7 +75,7 @@ TEXT = {
         "ok": "OK",
         "weak": "WEAK",
         "missing": "MISSING",
-        "passed": "{n}/7 项通过",
+        "passed": "{n}/{total} 项通过",
         "note": "{n} 处占位待填",
         "checks": [
             "六个必需小节齐全",
@@ -81,6 +85,7 @@ TEXT = {
             "数据与口径至少列出三个字段",
             "复现方式写明种子与输入文件",
             "还缺什么至少写了一条",
+            "正文里每个小数都能在结果文件里找到",
         ],
         "d_sections": "六个小节都在",
         "d_sections_bad": "缺这几节：{names}",
@@ -98,6 +103,9 @@ TEXT = {
         "d_repro_inputs": "没有写输入文件",
         "d_missing": "{n} 条待办",
         "d_missing_bad": "没有列待办",
+        "d_numbers": "{n} 个数字都找到了",
+        "d_numbers_bad": "{n} 个数字里有 {m} 个在结果文件里找不到：{items}",
+        "d_no_numbers": "正文没有小数，没有可对账的数字",
         "None": "任何一项",
         "coef": "系数",
         "se": "标准误",
@@ -114,6 +122,8 @@ SECTIONS = [
 ]
 
 PLACEHOLDER = re.compile(r"\[(?:to fill|待填|待核实|verify)\]")
+FENCE = re.compile(r"^```.*?^```", re.S | re.M)
+DECIMAL = re.compile(r"\d+\.\d{2,}")
 NUM = re.compile(r"\d+\.\d{2,}")
 SE_WORDS = ("standard error", "标准误")
 
@@ -155,10 +165,58 @@ def bullets(body):
     return [line for line in body.splitlines() if line.strip().startswith(("- ", "* "))]
 
 
+def strip_fences(text):
+    """Drop fenced code blocks so that table digits are not reconciled."""
+    return FENCE.sub("", text)
+
+
+def gather_numbers(path):
+    """Every real number found anywhere in the JSON, as floats."""
+    import json
+
+    with io.open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    out = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+        elif isinstance(node, bool):
+            return
+        elif isinstance(node, (int, float)):
+            out.append(float(node))
+
+    walk(data)
+    return out
+
+
+def check_numbers(report_text, values):
+    """Return (matched, missing) for every decimal in the prose."""
+    prose = strip_fences(report_text)
+    tokens = DECIMAL.findall(prose)
+    formatted = {}
+    for v in values:
+        for p in range(2, 7):
+            formatted.setdefault("%.*f" % (p, v), v)
+    matched, missing = 0, []
+    for tok in tokens:
+        if tok in formatted:
+            matched += 1
+        elif tok not in missing:
+            missing.append(tok)
+    return len(tokens), matched, missing
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Check one report against seven mechanical rules.")
     parser.add_argument("path", help="path to the report in Markdown")
     parser.add_argument("--lang", choices=("en", "zh"), default="zh", help="language of the report and of the output")
+    parser.add_argument("--results", default=None,
+                        help="optional results JSON; when given, an eighth check reconciles every decimal in the prose against it")
     args = parser.parse_args(argv)
 
     tx = TEXT[args.lang]
@@ -240,21 +298,37 @@ def main(argv=None):
     else:
         results.append((False, True, tx["d_missing_bad"]))
 
+    if args.results:
+        try:
+            values = gather_numbers(args.results)
+        except (OSError, ValueError) as exc:
+            sys.stderr.write("cannot read %s: %s\n" % (args.results, exc))
+            return 2
+        total_n, matched, missing = check_numbers(text, values)
+        if total_n == 0:
+            results.append((True, True, tx["d_no_numbers"]))
+        elif missing:
+            results.append((False, True, tx["d_numbers_bad"].format(
+                n=total_n, m=len(missing), items=", ".join(missing[:6]))))
+        else:
+            results.append((True, True, tx["d_numbers"].format(n=matched)))
+
+    total = len(results)
     print(tx["title"])
-    print("%s: %s" % (tx["file"], args.path))
+    print("%s: %s" % (tx["file"], args.path.replace(os.sep, "/").replace("\\", "/")))
     print()
     passed = 0
     for i, (ok, weak, detail) in enumerate(results, 1):
         mark = tx["ok"] if ok else (tx["weak"] if weak else tx["missing"])
         if ok:
             passed += 1
-        print("[%s] %d/7 %s: %s" % (mark, i, tx["checks"][i - 1], detail))
+        print("[%s] %d/%d %s: %s" % (mark, i, total, tx["checks"][i - 1], detail))
 
     placeholders = PLACEHOLDER.findall(text)
     if placeholders:
         print(tx["note"].format(n=len(placeholders)))
-    print(tx["passed"].format(n=passed))
-    return 0 if passed == 7 else 1
+    print(tx["passed"].format(n=passed, total=total))
+    return 0 if passed == total else 1
 
 
 if __name__ == "__main__":
