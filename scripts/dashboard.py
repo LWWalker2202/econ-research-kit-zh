@@ -158,10 +158,18 @@ CHECK_NAMES = {
 # 读
 # --------------------------------------------------------------------------- #
 def read_text(path):
+    """读文本：先按 UTF-8；不是 UTF-8 的（别人用 PowerShell 重定向写的 UTF-16 等）退到逐级解码，
+    宁可显示怪字符也不要因为一份金样把整块看板打断。"""
     if not os.path.exists(path):
         return ""
-    with io.open(path, encoding="utf-8") as f:
-        return f.read()
+    with io.open(path, "rb") as f:
+        raw = f.read()
+    for enc in ("utf-8", "utf-8-sig", "utf-16", "gb18030"):
+        try:
+            return raw.decode(enc)
+        except (UnicodeDecodeError, UnicodeError):
+            continue
+    return raw.decode("utf-8", "replace")
 
 
 def parse_progress(root):
