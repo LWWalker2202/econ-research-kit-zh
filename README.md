@@ -2,7 +2,7 @@
 
 一套**按工序分好的经济学实证研究工具包**：从"这个题目能不能做"，到"跑回归"，到"出一张三线表"，到"写报告"，到"回审稿意见"，一共八道工序。每一道工序要么给你一个能直接跑的模板（跑完跟标准答案比对），要么给你一个检查器（把你写好的东西丢进去，它逐条挑毛病）。
 
-**版本 0.3.24** ｜ 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 自动比对
+**版本 0.3.25** ｜ 本仓是 [`econ-research-kit`](https://github.com/LWWalker2202/econ-research-kit)（英文主仓）的中文镜像，两仓结构由 CI 自动比对
 
 > 第一次来？直接跳到「第一步」。不用先弄懂这个仓库为什么长这样。
 
@@ -124,7 +124,10 @@ python scripts\check_parity.py
 ```
 python scripts/dashboard.py
 python scripts/dashboard.py --html dashboard.html
-python scripts/coverage.py                 # 项目本身齐不齐，N/12
+python scripts/coverage.py                 # 项目本身齐不齐，N/14
+python scripts/crosscheck.py               # 第二套实现，同一批金样数字
+python scripts/to_fill.py                  # 每处占位符，按该谁填分派
+python scripts/estimator_choice.py --data panel   # 这种数据结构该用哪个估计量
 python scripts/journal_pack.py "数量经济"   # 某刊投稿清单：实测 / 须知 / 待核实
 ```
 

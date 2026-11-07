@@ -740,6 +740,11 @@ def main() -> int:
         help="also write spec-ladder.md, one rung per line",
     )
     parser.add_argument(
+        "--dump-csv",
+        metavar="PATH",
+        help="write the seeded panel to PATH as CSV and stop (for crosscheck.py)",
+    )
+    parser.add_argument(
         "--step",
         type=int,
         default=0,
@@ -749,6 +754,14 @@ def main() -> int:
     args = parser.parse_args()
 
     panel = make_panel()
+    if args.dump_csv:
+        target = os.path.abspath(args.dump_csv)
+        parent = os.path.dirname(target)
+        if parent and not os.path.isdir(parent):
+            os.makedirs(parent)
+        panel.to_csv(target, index=False)
+        print("wrote {0}".format(target))
+        return 0
     results = estimate(panel)
 
     os.makedirs(args.out_dir, exist_ok=True)

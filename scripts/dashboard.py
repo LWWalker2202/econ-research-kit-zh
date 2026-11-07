@@ -406,11 +406,8 @@ def read_ledger(project, limit=400):
 def stage_details(root, wf, gate, checks, project):
     """每一段的点开视图：状态 / 闸门问句 / 你的回答 / 该交的文件在不在 / 流程要点 / 检查器。"""
     by_stage = {}
-    for rec in (gate or {}).get("stages") or []:
-        try:
-            by_stage[int(rec.get("stage"))] = rec
-        except (TypeError, ValueError):
-            continue
+    for rec in stage_records(gate):
+        by_stage[int(rec["stage"])] = rec
     named = dict((c.get("name"), c) for c in (checks or []))
     ledger = read_ledger(project)
     out = []
@@ -487,12 +484,35 @@ def bar(frac, width=28, fill="=", empty="."):
     return fill * n + empty * (width - n)
 
 
+def stage_records(gate):
+    """把 gate 里的 stages 归一成 [{"stage": int, ...}]，dict 与 list 两种写法都吃。"""
+    raw = (gate or {}).get("stages") or {}
+    if isinstance(raw, dict):
+        pairs = list(raw.items())
+    elif isinstance(raw, list):
+        pairs = list(enumerate(raw))
+    else:
+        return []
+    out = []
+    for key, rec in pairs:
+        if not isinstance(rec, dict):
+            continue
+        try:
+            sid = int(rec.get("stage", key))
+        except (TypeError, ValueError):
+            continue
+        item = dict(rec)
+        item["stage"] = sid
+        out.append(item)
+    return out
+
+
 def stage_status(board, sid):
     g = board["gate"]
     if not g:
         return "todo", ""
     cur = g.get("current", 0)
-    for rec in g.get("stages", []):
+    for rec in stage_records(g):
         if rec.get("stage") == sid:
             status = rec.get("status", "open")
             if status == "open" and sid > cur:

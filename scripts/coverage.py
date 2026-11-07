@@ -27,6 +27,8 @@ CHECKS_ZH = [
     ("label", "表文件有 \\label"),
     ("panel", "看板数据不超过一天"),
     ("pinned", "估计结果写明了设定层级"),
+    ("cross", "第二套实现重算过金样系数（crosscheck）"),
+    ("tofill", "待填清单已分派（to-fill.csv）"),
 ]
 CHECKS_EN = [
     ("gate", "gate started (gate.json present)"),
@@ -41,6 +43,8 @@ CHECKS_EN = [
     ("label", "table files carry \\label"),
     ("panel", "board data is younger than a day"),
     ("pinned", "estimates record their specification level"),
+    ("cross", "a second implementation recomputed the gold numbers"),
+    ("tofill", "placeholders triaged into to-fill.csv"),
 ]
 
 
@@ -66,7 +70,11 @@ def check_project(project):
     """返回 [(key, ok, note)]；note 只用一句话说明现状。"""
     p = os.path.abspath(project)
     st = gate_of(p)
-    stages = (st or {}).get("stages") or []
+    raw = (st or {}).get("stages") or {}
+    if isinstance(raw, dict):
+        stages = [dict(v, stage=k) for k, v in raw.items() if isinstance(v, dict)]
+    else:
+        stages = list(raw)
     passed = [s for s in stages if s.get("status") in ("passed", "forced")]
     forced = [s for s in stages if s.get("status") == "forced"]
     out = []
@@ -111,7 +119,13 @@ def check_project(project):
     labelled = bool(tex) and all("\\label" in read(os.path.join(p, t)) for t in tex)
     out.append(("label", labelled, ("%d 个 .tex" % len(tex)) if tex else "没有 .tex 表文件"))
 
-    panel = os.path.join(p, STATE, "dashboard.json")
+
+    cross = [f for f in (os.listdir(p) if os.path.isdir(p) else []) if "crosscheck" in f.lower()]
+    out.append(("cross", bool(cross), ", ".join(cross[:2]) if cross else "-"))
+    tf = os.path.join(p, STATE, "to-fill.csv")
+    tf_rows = max(0, len(read(tf).splitlines()) - 1) if os.path.isfile(tf) else 0
+    out.append(("tofill", tf_rows > 0, ("%d" % tf_rows) if tf_rows else "-"))
+\n    panel = os.path.join(p, STATE, "dashboard.json")
     fresh = False
     if os.path.isfile(panel):
         fresh = (time.time() - os.path.getmtime(panel)) < 86400
