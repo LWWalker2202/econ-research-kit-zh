@@ -10,12 +10,13 @@
 
 从 `skills/estimation/expected/estimation-results.json` 选定的基准设定：`y ~ D + x1 + x2 | id + year`，固定效应 `id, year`；点估计 0.352，标准误 0.143，p 值 0.017，R 方 0.529，观测数 600。
 
-下表从 `skills/tables-figures/expected/table1.tex` 原样嵌入。转换时请让代码块原样通过，以保留三线表版式与表注。
+下表从 `skills/tables-figures/expected/table1.tex` 原样嵌入。转换时请让代码块原样通过，以保留三线表版式、标签与表注。这份示例故意嵌了另一个项目的表：读到最后那张验收清单，看那条告警怎么响。
 
 ```latex
 \begin{table}[htbp]
 \centering
 \caption{基准回归结果}
+\label{tab:main}
 \begin{tabular}{lccc}
 \toprule
 \multicolumn{4}{c}{y} \\
@@ -64,7 +65,7 @@ $R^2$ & 0.053 & 0.188 & 0.236 \\
 - 估计脚本：`[待填]`
 - 随机种子：`20260315`（读自结果文件）
 - 输入文件：`skills/tables-figures/expected/table1.tex` 与 `skills/estimation/expected/estimation-results.json`
-- 命令：`python skills/report/templates/build_report.py --tables skills/tables-figures/expected/table1.tex --results skills/estimation/expected/estimation-results.json --lang zh --out skills/report/expected/report.md`
+- 命令：`python skills/report/templates/build_report.py --tables skills/tables-figures/expected/table1.tex --results skills/estimation/expected/estimation-results.json --lang zh --out output/report.md`
 
 ## 还缺什么
 

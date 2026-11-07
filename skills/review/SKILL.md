@@ -47,6 +47,7 @@ description: 把决定信与两份审稿意见拆开处理：把每条意见分�
 | `manuscript/manuscript_v2.tex` | 修订稿，标注改动痕迹 | 投稿系统 |
 
 - 回复信定稿前跑 `skills/review/templates/check_response.py`；金样输出见 `skills/review/expected/check-report.txt`。
+- `skills/review/templates/review-protocol.md` —— 数据与回归的两方复核：机器方（`verify_chain.py`、`crosscheck.py`、`coverage.py`）与人方要手做的五项检查。
 
 ## 验收
 

@@ -29,6 +29,7 @@ CHECKS_ZH = [
     ("pinned", "估计结果写明了设定层级"),
     ("cross", "第二套实现重算过金样系数（crosscheck）"),
     ("tofill", "待填清单已分派（to-fill.csv）"),
+    ("chain", "数字链对得上（verify_chain：原始行→清洗→回归→报告）"),
 ]
 CHECKS_EN = [
     ("gate", "gate started (gate.json present)"),
@@ -45,6 +46,7 @@ CHECKS_EN = [
     ("pinned", "estimates record their specification level"),
     ("cross", "a second implementation recomputed the gold numbers"),
     ("tofill", "placeholders triaged into to-fill.csv"),
+    ("chain", "the number chain holds (verify_chain: raw -> cleaned -> model -> report)"),
 ]
 
 
@@ -130,6 +132,19 @@ def check_project(project):
     if os.path.isfile(panel):
         fresh = (time.time() - os.path.getmtime(panel)) < 86400
     out.append(("panel", fresh, "面板数据是今天的" if fresh else "面板数据超过一天或不存在"))
+
+    vc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "verify_chain.py")
+    chain_ok, chain_note = False, "-"
+    if os.path.isfile(vc) and os.path.isfile(os.path.join(p, "output", "estimation-results.json")):
+        import subprocess
+        import sys as _sys
+        r = subprocess.run([_sys.executable, vc, "--project", p, "--lang", "en"],
+                           capture_output=True, text=True)
+        chain_ok = r.returncode == 0
+        chain_note = "3/3" if chain_ok else "有链断了"
+    else:
+        chain_note = "没有回归结果"
+    out.append(("chain", chain_ok, chain_note))
 
     lad = read(os.path.join(p, "estimation-results.md"))
     pinned = ("设定" in lad) or ("ladder" in lad.lower()) or ("specification" in lad.lower())

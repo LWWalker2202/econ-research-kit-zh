@@ -13,7 +13,9 @@ Five steps are run in order:
 3. the same coefficients with standard errors clustered at the individual level;
 4. an event study with two leads, two lags, and a binned endpoint on each side,
    base period -1;
-5. the robustness check that changes only the cluster level (year).
+5. the same coefficients with standard errors clustered at two more levels
+   (block and year), so the reader sees how far the clustering assumption moves
+   the standard error.
 
 ``--lang en|zh`` switches the wording of the report and changes nothing else, so
 the machine-readable JSON is identical in both languages. The Stata counterpart
@@ -805,7 +807,7 @@ def main() -> int:
         print("wrote {0}".format(os.path.abspath(ladder_path)))
 
     specs = len(results["specifications"])
-    print("wrote {0} ({1} specifications, {2} bytes)".format(os.path.abspath(md_path), specs, len(md_text)))
+    print("wrote {0} ({1} specifications, {2} characters)".format(os.path.abspath(md_path), specs, len(md_text)))
     print("wrote {0} ({1} bytes)".format(os.path.abspath(json_path), len(json_bytes)))
     return 0
 

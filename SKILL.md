@@ -37,6 +37,8 @@ description: 经济学实证研究的动作库——把一次研究拆成八道�
 
 看表之前先跑一次 `python scripts/preflight.py "<用户的原话>"`，它会告诉你四槽缺哪个。接着跑 `python scripts/spec.py "<用户的原话>"`：它会打印一份任务规格草稿——四槽位、它读出的段号、一份可以直接改的提示词、以及动手前要确认的三件事。**这份草稿就是要先给用户看的东西**，一起改完再开工。任何时候 `python scripts/dashboard.py` 都能打出一页看板：项目停在哪一段、下一段会问什么、检查器过了几项、清洗把样本挪了多少。`python scripts/coverage.py` 再给项目本身打一次分：十二项具名检查（有规格、有契约、有账本、该交的文件都在、表有标签、看板是新的），缺口从「感觉」变成「4/14」。`python scripts/crosscheck.py` 用第二套实现重算金样系数（7/7，误差 1e-6 以内），数字漂了是机器抓出来的；`python scripts/to_fill.py` 把每一处占位符分派成 `.econ-kit/to-fill.csv`（谁填、为什么）；`python scripts/estimator_choice.py --data panel` 按数据结构点名该用哪个估计量。组合包的宿主半边还会盯着 `.econ-kit/gate.json`，每十秒自己重写看板——没人需要记得那条看板命令。
 
+从第 4 段进第 5 段之前、以及交付之前，各跑一次 `python scripts/verify_chain.py`：它把清洗那几个数重新加减一遍、把回归样本量和清洗后行数对上、再把报告里每个小数回查结果文件。哪一链断了，就是代码、数据、正文三者不一致——先修它再往下走。
+
 **动手之前先开闸门**：`python scripts/gate.py status`。没有状态就先 `gate.py start "<题目>"`。`gate.py pass` 在 `.econ-kit/spec.md` 不存在时会直接拒绝，而那份文件由 `scripts/spec.py` 生成——就是先给用户看、改完再开工的规格与提示词草稿。`gate.py start` 还会把 `AGENTS.md` 与 `.econ-kit/PROTOCOL.md` 写进项目，后面任何 agent 都能读到这份契约。表里的"第一步动作"都是在四槽齐了之后才做的；四槽没齐，只有一件事可以做——把缺的那几个问清楚。
 
 每段列的是**下限**，不是上限：题目需要更多就多做，把多做的用 `gate.py pass --extra "..."` 记进账本；不做不算缺，做了也不白做（`C7`）。

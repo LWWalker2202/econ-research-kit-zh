@@ -1,12 +1,14 @@
 {
   "about": "经济学实证研究的动作库：八道工序、十二个领域、可跑的金样与检查器，外加一本配套手册。",
   "about_en": "A workflow kit for empirical economics: eight stages, twelve fields, runnable checks and golden outputs.",
-  "version": "0.3.14",
-  "released": "v0.3.14",
+  "version": "0.3.29",
+  "released": "v0.3.28",
   "released_at": "2026-11-07",
   "repos": {
-    "econ-research-kit": "f28bf9e",
-    "econ-research-kit-zh": "f68e093"
+    "econ-research-kit": "f794f8c",
+    "econ-research-kit-zh": "2e8904e",
+    "en": {},
+    "zh": {}
   },
   "updated_at": "2026-11-07",
   "steps": [
@@ -125,14 +127,115 @@
       "artifacts": [
         "scripts/dashboard.py"
       ]
+    },
+    {
+      "id": "D3",
+      "name": "v0.3.12–0.3.14 面板真正可用：client 模块 id 改回包名、注册 tab 类型、条目点开走 useTabInfo",
+      "name_en": "v0.3.12-0.3.14: the panel actually appears and opens (module id, tab type, click via useTabInfo)",
+      "status": "done",
+      "at": "2026-11-07",
+      "artifacts": [
+        "lib/client.js",
+        "package.json",
+        "releases/tag/v0.3.14"
+      ]
+    },
+    {
+      "id": "D4",
+      "name": "v0.3.16：硬闸门——没有 .econ-kit/spec.md 不许 pass；start 写 PROTOCOL.md 与 AGENTS.md 契约段",
+      "name_en": "v0.3.16: hard gate - no spec.md, no pass; start writes PROTOCOL.md and the AGENTS.md contract",
+      "status": "done",
+      "at": "2026-11-07",
+      "artifacts": [
+        "scripts/gate.py",
+        "scripts/spec.py"
+      ]
+    },
+    {
+      "id": "D5",
+      "name": "v0.3.17–0.3.20：宿主读文件返回 {ok,value} 信封（信封根因）、面板补样式、点开每段看六卡",
+      "name_en": "v0.3.17-0.3.20: the {ok,value} envelope, panel CSS, per-stage detail view",
+      "status": "done",
+      "at": "2026-11-07",
+      "artifacts": [
+        "lib/client.js",
+        "scripts/dashboard.py"
+      ]
+    },
+    {
+      "id": "D6",
+      "name": "v0.3.21–0.3.23：修陈旧面板数据与点击、C1–C6 六条编号约束、ledger.jsonl 账本、每段时间线",
+      "name_en": "v0.3.21-0.3.23: stale panel data, constraints C1-C6, ledger.jsonl, per-stage timeline",
+      "status": "done",
+      "at": "2026-11-07",
+      "artifacts": [
+        "scripts/gate.py",
+        "scripts/dashboard.py"
+      ]
+    },
+    {
+      "id": "D7",
+      "name": "v0.3.24–0.3.25：coverage.py 14 项自查、journal_pack.py 六刊清单、零命令（宿主盯 gate.json）、crosscheck.py 与 to_fill.py",
+      "name_en": "v0.3.24-0.3.25: coverage.py, journal_pack.py, zero-command watcher, crosscheck.py, to_fill.py",
+      "status": "done",
+      "at": "2026-11-07",
+      "artifacts": [
+        "scripts/coverage.py",
+        "scripts/journal_pack.py",
+        "scripts/crosscheck.py",
+        "scripts/to_fill.py"
+      ]
+    },
+    {
+      "id": "D8",
+      "name": "v0.3.26–0.3.27：每段是下限（beyond + C7 + --extra 留痕），修 coverage.py 语法 bug",
+      "name_en": "v0.3.26-0.3.27: stages are floors (beyond, C7, --extra), fix coverage.py syntax bug",
+      "status": "done",
+      "at": "2026-11-07",
+      "artifacts": [
+        "workflows/main.yaml",
+        "scripts/stage.py",
+        "scripts/gate.py"
+      ]
+    },
+    {
+      "id": "D9",
+      "name": "v0.3.28：看板显性化规格草稿（原话 → 四槽 → 待答问题 → 六段提示词）",
+      "name_en": "v0.3.28: the panel shows the spec (your words, four slots, open questions, prompt draft)",
+      "status": "done",
+      "at": "2026-11-07",
+      "artifacts": [
+        "scripts/dashboard.py",
+        "lib/client.js",
+        "scripts/spec.py"
+      ]
+    },
+    {
+      "id": "D10",
+      "zh": "数字链核对脚本 verify_chain.py（三链，kit 模式 3/3）",
+      "en": "verify_chain.py: the number chain, three links, 3/3 in kit mode",
+      "done": true
+    },
+    {
+      "id": "D11",
+      "zh": "两方复核协议 review-protocol.md + coverage 15 项",
+      "en": "two-sided review protocol + 15-point coverage",
+      "done": true
+    },
+    {
+      "id": "D12",
+      "zh": "v0.3.29：审计三十余处问题按项修完，金样重生成",
+      "en": "v0.3.29: audit fixes and regenerated goldens",
+      "done": true
     }
   ],
   "gaps": [
     {
       "id": "G2",
       "name": "Codex 插件只登记进 config.toml，没在插件页实机验证过",
-      "name_en": "Codex plugin installed into config.toml but never verified in the UI",
-      "status": "open"
+      "name_en": "The Codex plugin has not been installed through the Codex plugin page; only the copy and git routes are verified",
+      "status": "open",
+      "name_zh": "Codex 插件页未在界面上实机装过（只有解压/复制与 git 两条路验过）"
     },
     {
       "id": "G3",
@@ -143,14 +246,16 @@
     {
       "id": "G4",
       "name": "249 处 [待填] 没做过分派（哪些该由作者填、哪些该由脚本填）",
-      "name_en": "249 to-fill markers never triaged",
-      "status": "open"
+      "name_en": "About 288 to-fill markers (265 in the Chinese repo) are bucketed as author/script/tutor in .econ-kit/to-fill.csv; the author still has to sign off",
+      "status": "open",
+      "name_zh": "约 288 处（中文仓 265 处）[待填] 已按 author/script/tutor 分桶写进 .econ-kit/to-fill.csv，待作者过一遍确认"
     },
     {
       "id": "G5",
       "name": "表图与报告两道机检只查形式，不查“这张表回答的问题对不对”（这层只能靠人闸门）",
-      "name_en": "Table and report checks are structural only; the semantic layer needs a human gate",
-      "status": "open"
+      "name_en": "Golden numbers are re-derived by crosscheck.py; a user's own tables and figures are still only checked for form",
+      "status": "partial",
+      "name_zh": "金样数字已由 crosscheck.py 用第二套实现复算（系数 1e-6、标准误倍数带）；用户自己项目的表图数字仍只查形式"
     },
     {
       "id": "G6",
@@ -158,7 +263,8 @@
       "text_en": "journals.json is a first pass; the A/B lists have not been reviewed by a field expert",
       "status": "partial",
       "name": "期刊分层 journals.json：142 个刊名已于 2026-11-05 逐条对 Crossref 核过写法（135 个名字精确一致、7 个用 ISSN 核、错配 0），但 A/B 分层仍是人工判断，待领域内人校",
-      "name_en": "journals.json: all 142 journal names were verified against Crossref on 2026-11-05 (135 exact title matches, 7 confirmed by ISSN, 0 mismatches); the A/B tiers are still a human judgement and need a field expert"
+      "name_en": "Journal tiers are a manual starting point; names are Crossref-verified, tiers await an expert read",
+      "name_zh": "journals.json 的 A/B 分层是人工起点，刊名写法已用 Crossref 核过，分层待领域内人校读"
     }
   ],
   "decisions": [

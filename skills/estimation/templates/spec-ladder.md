@@ -7,7 +7,7 @@
 - 复制到项目里，改名 `spec-ladder.md`。
 - 一级一行，顺序就是实际要跑的顺序：基准打头，之后每次只改一件事。
 - 每一级都要写清"相对上一级改了什么"。写"加控制变量"不够，把控制变量点名。
-- `python skills/estimation/templates/estimate_main.py --ladder` 会把合成面板的这张表一级一级填出来。
+- `python skills/estimation/templates/estimate_main.py --ladder` 会把合成面板的五级表格一次写全；`--step N` 才是跑一级停一级的增量写法。
 - 先定哪一级是报告用的那一级。先写下来，才能挡住"看过结果再挑一级"。
 
 ## 五级阶梯

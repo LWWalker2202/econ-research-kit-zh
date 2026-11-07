@@ -132,7 +132,8 @@ TEXT = {
             "{coef}，标准误 {se}，p 值 {p}，R 方 {r2}，观测数 {n_obs}。"
         ),
         "main_embed": (
-            "下表从 `{tables}` 原样嵌入。转换时请让代码块原样通过，以保留三线表版式与表注。"
+            "下表从 `{tables}` 原样嵌入。转换时请让代码块原样通过，以保留三线表版式、标签与表注。"
+            "这份示例故意嵌了另一个项目的表：读到最后那张验收清单，看那条告警怎么响。"
         ),
         "main_missing": "结果文件里没有可供选取的设定，主结果暂留为 `[待填]`。",
         "h_rob": "稳健性",
@@ -236,18 +237,26 @@ def script_display():
     return rel.replace("\\", "/")
 
 
+def _display(path):
+    """Print paths relative to the working directory so the golden report is path-stable."""
+    try:
+        return os.path.relpath(path).replace(os.sep, "/")
+    except ValueError:
+        return str(path).replace(os.sep, "/")
+
+
 def build_command(args, script_path):
     parts = [
         "python",
         script_path,
         "--tables",
-        args.tables,
+        _display(args.tables),
         "--results",
-        args.results,
+        _display(args.results),
         "--lang",
         args.lang,
         "--out",
-        args.out,
+        _display(args.out),
     ]
     if args.script:
         parts.extend(["--script", args.script])

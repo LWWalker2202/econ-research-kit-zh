@@ -33,7 +33,9 @@ local n_year = 6
 set obs `=`n_firm' * `n_year''
 gen long firm = floor((_n - 1) / `n_year') + 1
 gen int  year = 2018 + mod(_n - 1, `n_year')
-gen double assets      = exp(rnormal(9.5, 0.8)) * exp(rnormal(0, 0.1))
+gen double u           = rnormal()
+bysort firm: gen double size = exp(log(50000) + 0.8 * u[1])
+gen double assets      = size * exp(rnormal(0, 0.1))
 gen double revenue_wan = assets * runiform(0.5, 1.6)
 gen double roa         = 0.03 + 0.05 * rnormal() + 0.03 * (year >= 2020)
 gen double leverage    = max(0, 0.55 + 0.25 * rnormal())

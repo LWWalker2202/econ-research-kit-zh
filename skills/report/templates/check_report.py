@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Check one reproducible report against the seven mechanical rules of stage 6.
+"""Check one reproducible report against the eight mechanical rules of stage 6.
 
 Usage:
     python skills/report/templates/check_report.py output/report.md --lang en
     python skills/report/templates/check_report.py output/report.md --lang zh
 
-Exit code: 0 when all seven checks pass, 1 when any check is not OK, 2 on a
+Exit code: 0 when all eight checks pass, 1 when any check is not OK, 2 on a
 usage error.
 
 What it does not do: it cannot tell whether a number is right, or whether the
@@ -29,7 +29,7 @@ except Exception:  # pragma: no cover
 
 TEXT = {
     "en": {
-        "title": "check_report — seven mechanical rules for one report",
+        "title": "check_report — eight mechanical rules for one report",
         "file": "file",
         "ok": "OK",
         "weak": "WEAK",
@@ -70,7 +70,7 @@ TEXT = {
         "se": "a standard error",
     },
     "zh": {
-        "title": "check_report —— 一份可复现报告的七项机检",
+        "title": "check_report —— 一份可复现报告的八项机检",
         "file": "文件",
         "ok": "OK",
         "weak": "WEAK",
@@ -212,7 +212,7 @@ def check_numbers(report_text, values):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Check one report against seven mechanical rules.")
+    parser = argparse.ArgumentParser(description="Check one report against eight mechanical rules.")
     parser.add_argument("path", help="path to the report in Markdown")
     parser.add_argument("--lang", choices=("en", "zh"), default="zh", help="language of the report and of the output")
     parser.add_argument("--results", default=None,

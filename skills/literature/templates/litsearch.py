@@ -38,7 +38,15 @@ try:
 except Exception:
     pass
 
-VERSION = "0.3.9"
+def _kit_version():
+    here = os.path.dirname(os.path.abspath(__file__))
+    p = os.path.join(here, "..", "..", "..", "VERSION")
+    try:
+        return io.open(p, encoding="utf-8").read().strip() or "0"
+    except OSError:
+        return "0"
+
+VERSION = _kit_version()
 DEFAULT_MAILTO = os.environ.get("ECON_KIT_MAILTO", "2764002263@qq.com")
 UA = "econ-research-kit/%s (mailto:%s)" % (VERSION, DEFAULT_MAILTO)
 CROSSREF = "https://api.crossref.org/works"

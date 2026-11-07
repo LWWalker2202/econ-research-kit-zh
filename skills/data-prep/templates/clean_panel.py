@@ -424,7 +424,7 @@ def render_step_note(stats, step: int, lang: str, csv_path: str) -> str:
         "",
         text["note_does"].format(label=CLEAN_LABEL[step][lang]),
         text["note_rows"].format(before=before, after=after),
-        text["note_out"].format(path=csv_path),
+        text["note_out"].format(path=os.path.relpath(csv_path)),
         "",
     ]
     if step < 6:
