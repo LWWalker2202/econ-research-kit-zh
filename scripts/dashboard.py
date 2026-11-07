@@ -217,6 +217,18 @@ def parse_check_report(path):
     return None
 
 
+def coverage_of(project):
+    """项目自查覆盖（调 coverage.py；失败返回 None，不影响看板）。"""
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import coverage as _cov
+        rows = _cov.check_project(project)
+        ok = sum(1 for _k, good, _n in rows if good)
+        return {"covered": ok, "total": len(rows)}
+    except Exception:
+        return None
+
+
 def collect_checks(root):
     out = []
     base = os.path.join(root, "skills")
@@ -445,6 +457,7 @@ def collect(root, out_dir, lang, project=None):
         "gate": parse_gate(project or root),
         "checks": collect_checks(root),
         "scale": count_scale(root),
+        "coverage": coverage_of(project),
         "cleaning": parse_cleaning(out_dir),
         "ladder": parse_ladder(out_dir)[0],
         "events": parse_ladder(out_dir)[1],

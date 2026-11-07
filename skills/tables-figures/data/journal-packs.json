@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "note": "confidence 三档：vendor=按该刊公开投稿须知写成、可核；measured=我们从 283 篇语料里实测得来；unverified=待核，脚本渲染时标 [待核实]。",
+  "journals": [
+    {
+      "id": "aer", "name": "American Economic Review", "aliases": ["AER"], "tier": "A", "lang": "en",
+      "items": [
+        {"k": "abstract", "v": "不超过 100 词，单段，不引文献", "confidence": "vendor"},
+        {"k": "jel", "v": "附 2-3 个 JEL 代码", "confidence": "vendor"},
+        {"k": "tables", "v": "表题在上、表注在下、无竖线、显著性星号在表注说明", "confidence": "vendor"},
+        {"k": "references", "v": "作者-年份制，正文括号注", "confidence": "vendor"},
+        {"k": "data", "v": "数据与代码须按 AEA 数据编辑政策可复现", "confidence": "vendor"},
+        {"k": "appendix", "v": "长推导与稳健性放在线附录", "confidence": "unverified"}
+      ]
+    },
+    {
+      "id": "qje", "name": "Quarterly Journal of Economics", "aliases": ["QJE"], "tier": "A", "lang": "en",
+      "items": [
+        {"k": "abstract", "v": "摘要开门见山，第一句给结论", "confidence": "unverified"},
+        {"k": "tables", "v": "只留支撑论点的表，正文表控制在 8 张以内", "confidence": "unverified"},
+        {"k": "figures", "v": "黑白可读，灰度即可分辨", "confidence": "unverified"},
+        {"k": "references", "v": "作者-年份制", "confidence": "vendor"},
+        {"k": "appendix", "v": "补充材料单独提交", "confidence": "unverified"}
+      ]
+    },
+    {
+      "id": "jeem", "name": "Journal of Environmental Economics and Management", "aliases": ["JEEM"], "tier": "A", "lang": "en",
+      "items": [
+        {"k": "abstract", "v": "150 词以内，写清识别策略与效应量级", "confidence": "unverified"},
+        {"k": "tables", "v": "主表给系数与标准误，聚类层级写在表注", "confidence": "vendor"},
+        {"k": "figures", "v": "事件研究图须标参照期与置信区间", "confidence": "vendor"},
+        {"k": "data", "v": "政策文件、环境监测数据需说明来源、时段与匹配方式", "confidence": "unverified"}
+      ]
+    },
+    {
+      "id": "jpubesc", "name": "Journal of Public Economics", "aliases": ["JPubE"], "tier": "A", "lang": "en",
+      "items": [
+        {"k": "abstract", "v": "100-150 词，结论前置", "confidence": "unverified"},
+        {"k": "tables", "v": "三线表，星号在表注说明对应显著性水平", "confidence": "vendor"},
+        {"k": "data", "v": "交代数据可得性；涉及人体数据须说明伦理审批", "confidence": "unverified"}
+      ]
+    },
+    {
+      "id": "cn-qje", "name": "经济学（季刊）", "aliases": ["经济学季刊", "China Economic Quarterly", "CEQ"], "tier": "A", "lang": "zh",
+      "items": [
+        {"k": "title", "v": "表题居中（实测 55/63 张表居中），「表 1」与表题同行", "confidence": "measured"},
+        {"k": "lines", "v": "三到四条横线、无竖线（与《数量》一致）", "confidence": "measured"},
+        {"k": "note", "v": "表注一律在表下方", "confidence": "measured"},
+        {"k": "decimals", "v": "3/4/5 位小数并存，同一张表内必须统一", "confidence": "measured"},
+        {"k": "punct", "v": "冒号全角或半角皆可，篇内一致即可", "confidence": "measured"},
+        {"k": "abstract", "v": "中文摘要约 300 字，另附英文摘要与关键词 3-5 个", "confidence": "unverified"},
+        {"k": "jel", "v": "需 JEL 分类号", "confidence": "unverified"},
+        {"k": "references", "v": "中文文献在前、英文在后，著录到页码", "confidence": "unverified"}
+      ]
+    },
+    {
+      "id": "cn-qte", "name": "数量经济技术经济研究", "aliases": ["数量经济技术经济研究", "QTE"], "tier": "A", "lang": "zh",
+      "items": [
+        {"k": "title", "v": "表题左缩进（实测 76/84 张表左对齐），不居中", "confidence": "measured"},
+        {"k": "lines", "v": "三到四条横线、无竖线", "confidence": "measured"},
+        {"k": "decimals", "v": "以 3 位小数为主（实测 54/55 张表），统一到 3 位最稳", "confidence": "measured"},
+        {"k": "note", "v": "表注在表下，星号说明显著性水平", "confidence": "measured"},
+        {"k": "punct", "v": "标点几乎全用全角", "confidence": "measured"},
+        {"k": "abstract", "v": "中文摘要 200-300 字 + 关键词 3-5 个", "confidence": "unverified"}
+      ]
+    }
+  ]
+}

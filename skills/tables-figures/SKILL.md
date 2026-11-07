@@ -61,6 +61,7 @@ description: 把冻结的估计结果做成可直接投稿的表与图：三线�
 - [ ] 每张表图都在正文里被编号引用过，没有指向不存在表图的引用。
 - [ ] 同一估计文件下，Stata 与 Python 两条链导出的表逐位相同。
 - [ ] 跑 `python skills/tables-figures/templates/check_table.py output/table1.tex`，七项全过。
+- [ ] 跑过 `python scripts/journal_pack.py "<刊名>"`，清单里每条 [待核实] 都对过该刊最新投稿须知，没对上的删掉、不照抄。
 
 ## 常见失败模式
 
