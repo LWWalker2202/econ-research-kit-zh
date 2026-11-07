@@ -370,6 +370,27 @@ def parse_skill_flow(root, skill):
     return out
 
 
+def read_ledger(project, limit=400):
+    """读 .econ-kit/ledger.jsonl（C6 账本）。坏行跳过，读不到就返回空。"""
+    path = os.path.join(os.path.abspath(project), ".econ-kit", "ledger.jsonl")
+    out = []
+    if not os.path.isfile(path):
+        return out
+    try:
+        with io.open(path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    out.append(json.loads(line))
+                except ValueError:
+                    continue
+    except OSError:
+        return []
+    return out[-limit:]
+
+
 def stage_details(root, wf, gate, checks, project):
     """每一段的点开视图：状态 / 闸门问句 / 你的回答 / 该交的文件在不在 / 流程要点 / 检查器。"""
     by_stage = {}
@@ -379,6 +400,7 @@ def stage_details(root, wf, gate, checks, project):
         except (TypeError, ValueError):
             continue
     named = dict((c.get("name"), c) for c in (checks or []))
+    ledger = read_ledger(project)
     out = []
     for i, w in enumerate(wf or []):
         sid = int(w.get("id", i))
@@ -400,6 +422,7 @@ def stage_details(root, wf, gate, checks, project):
             "files": files,
             "flow": parse_skill_flow(root, w.get("skill", "")),
             "check": named.get(w.get("skill", "")),
+            "log": [e for e in ledger if str(e.get("stage")) == str(sid)][-4:],
         })
     return out
 

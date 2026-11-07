@@ -28,6 +28,7 @@ if hasattr(sys.stdout, "reconfigure"):
 STATE_DIR = ".econ-kit"
 STATE_FILE = os.path.join(STATE_DIR, "gate.json")
 SPEC_FILE = os.path.join(STATE_DIR, "spec.md")
+LEDGER_FILE = os.path.join(STATE_DIR, "ledger.jsonl")
 AGENTS_FILE = "AGENTS.md"
 PROTOCOL_FILE = os.path.join(STATE_DIR, "PROTOCOL.md")
 
@@ -103,6 +104,8 @@ ARTIFACTS = {
     8: ["response-letter.md"],
 }
 
+CONSTRAINTS = '## 六条约束（拒绝时会回编号）\n\n- **C1 规格先行**：放行前必须有 `.econ-kit/spec.md`。\n- **C2 产物齐备**：该段要交的文件必须真的存在。\n- **C3 回答有效**：少于八个字的回答不算回答。\n- **C4 跳过留痕**：`--force` 可以越过 C1/C2，但缺口写进 gate.json 并在看板标红。\n- **C5 状态可复原**：任何时候 `gate.py status` 都说清停在哪一段。\n- **C6 账本可追**：每次状态变化都往 `.econ-kit/ledger.jsonl` 追加一行，不改历史。\n\n## Constraints (cited when refusing)\n\n- **C1 spec first** - a task spec must exist before anything advances.\n- **C2 artifacts present** - the files promised by the stage must exist.\n- **C3 real answer** - fewer than eight characters is not an answer.\n- **C4 forced moves are recorded** - `--force` passes but the gaps are written down.\n- **C5 state is restorable** - `gate.py status` always says where you are.\n- **C6 the ledger is append-only** - every transition appends one JSON line.\n'
+
 MIN_ANSWER = 8  # 少于 8 个字符的回答不算回答（"好""行""嗯"不是确认）
 
 T = {
@@ -116,11 +119,11 @@ T = {
         "all_done": "八段都过了。剩下的是写正文和投稿，不归闸门管。",
         "ask": "第 %d 段（%s）要问你的：\n\n  %s\n\n答完跑：python scripts/gate.py pass \"<你的回答>\"",
         "passed": "第 %d 段放行。记录：%s",
-        "too_short": "这句话太短，不算回答（至少 %d 个字）。真确认一下，别写「好」。",
-        "no_spec": "还没有任务规格 `.econ-kit/spec.md`。先把规格与提示词草稿给用户看：\n    python scripts/spec.py \"<用户的原话>\"\n改完再 pass；确实要跳过，用 --force 并在回答里写清为什么。",
+        "too_short": "[C3] 这句话太短，不算回答（至少 %d 个字）。真确认一下，别写「好」。",
+        "no_spec": "[C1] 还没有任务规格 `.econ-kit/spec.md`。先把规格与提示词草稿给用户看：\n    python scripts/spec.py \"<用户的原话>\"\n改完再 pass；确实要跳过，用 --force 并在回答里写清为什么。",
         "need_spec": "下一步：先把规格与提示词草稿给用户看（spec.py），不是直接开工。",
-        "missing_art": "第 %d 段还缺产物：%s\n补齐再 pass；确实要先跳过，用 gate.py pass \"<回答>\" --force 并在这里写清为什么。",
-        "forced": "第 %d 段带缺口放行（产物缺：%s）。这条会记在案上。",
+        "missing_art": "[C2] 第 %d 段还缺产物：%s\n补齐再 pass；确实要先跳过，用 gate.py pass \"<回答>\" --force 并在这里写清为什么。",
+        "forced": "[C4] 第 %d 段带缺口放行（产物缺：%s）。这条会记在案上。",
         "blocked": "已标记暂停。原因：%s",
         "done": "八段全部通过。",
         "next_stage": "下一步：第 %d 段 %s —— %s",
@@ -135,11 +138,11 @@ T = {
         "all_done": "All eight stages passed. What remains is drafting and submission, which the gate does not police.",
         "ask": "Stage %d (%s) asks you:\n\n  %s\n\nAfter answering: python scripts/gate.py pass \"<your answer>\"",
         "passed": "Stage %d passed. Recorded: %s",
-        "too_short": "That is too short to count as an answer (min %d characters). Confirm for real.",
-        "no_spec": "No task spec yet (`.econ-kit/spec.md`). Show the spec and prompt draft to the user first:\n    python scripts/spec.py \"<the user's words>\"\nThen pass; if you really must skip, use --force and write down why.",
+        "too_short": "[C3] That is too short to count as an answer (min %d characters). Confirm for real.",
+        "no_spec": "[C1] No task spec yet (`.econ-kit/spec.md`). Show the spec and prompt draft to the user first:\n    python scripts/spec.py \"<the user's words>\"\nThen pass; if you really must skip, use --force and write down why.",
         "need_spec": "Next: show the spec and prompt draft to the user (spec.py), do not start producing yet.",
-        "missing_art": "Stage %d is missing artifacts: %s\nProduce them, or use --force and write down why you skipped.",
-        "forced": "Stage %d passed with gaps (%s). This is on the record.",
+        "missing_art": "[C2] Stage %d is missing artifacts: %s\nProduce them, or use --force and write down why you skipped.",
+        "forced": "[C4] Stage %d passed with gaps (%s). This is on the record.",
         "blocked": "Marked as blocked. Reason: %s",
         "done": "All eight stages passed.",
         "next_stage": "Next: stage %d %s — %s",
@@ -159,7 +162,7 @@ def write_protocol():
     if not os.path.isdir(STATE_DIR):
         os.makedirs(STATE_DIR)
     with io.open(PROTOCOL_FILE, "w", encoding="utf-8", newline="\n") as f:
-        f.write(PROTOCOL)
+        f.write(PROTOCOL + CONSTRAINTS)
     marker = "<!-- econ-research-kit:begin -->"
     body = ""
     if os.path.exists(AGENTS_FILE):
@@ -179,6 +182,21 @@ def status_card(cur):
     print("产物 : " + ("、".join(art) if art else "—"))
     print("停在哪: 等用户回答 `gate.py pass \"<原话>\"`" if st else "八段全部通过")
     print("")
+
+def append_ledger(event, stage, question="", answer="", gaps=None, note=""):
+    """C6：状态一变就追加一行，永不改写历史。失败不吭声——账本不该拖垮闸门。"""
+    try:
+        if not os.path.isdir(STATE_DIR):
+            os.makedirs(STATE_DIR)
+        import datetime
+        rec = {"ts": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+               "event": event, "stage": stage, "question": question,
+               "answer": answer, "gaps": list(gaps or []), "note": note}
+        with io.open(LEDGER_FILE, "a", encoding="utf-8", newline="\n") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+
 
 def save(st):
     if not os.path.isdir(STATE_DIR):
@@ -210,6 +228,7 @@ def main(argv=None):
         st = {"question": a.text.strip(), "current": 0, "blocked": False,
               "stages": [{"stage": s[0], "name": s[1], "skill": s[2], "status": "open",
                           "answer": "", "answered_at": "", "forced_gaps": []} for s in STAGES]}
+        append_ledger("start", 0, question=st["question"])
         save(st)
         write_protocol()
         print(t["started"] % (st["question"], 0, STAGES[0][1]))
@@ -219,6 +238,7 @@ def main(argv=None):
 
     if a.cmd == "reset":
         if os.path.exists(STATE_FILE):
+            append_ledger("reset", -1, note="gate state cleared")
             os.remove(STATE_FILE)
             print("已清除闸门状态。" if a.lang == "zh" else "Gate state cleared.")
             return 0
@@ -245,7 +265,7 @@ def main(argv=None):
         for s, rec in zip(STAGES, st["stages"]):
             mark = {"open": "⏳ 等回答" if a.lang == "zh" else "open",
                     "passed": "✅ 通过" if a.lang == "zh" else "passed",
-                    "forced": "⚠️ 带缺口放行" if a.lang == "zh" else "forced"}.get(rec["status"], rec["status"])
+                    "forced": "[C4] ⚠️ 带缺口放行" if a.lang == "zh" else "forced"}.get(rec["status"], rec["status"])
             print("| %d | %s | %s | %s |" % (s[0], s[3], s[2], mark))
         print("")
         if cur >= len(STAGES):
@@ -272,6 +292,7 @@ def main(argv=None):
         st["blocked"] = True
         rec["blocked_reason"] = a.text.strip()
         st.setdefault("block_log", []).append({"stage": cur, "reason": a.text.strip()})
+        append_ledger("block", cur, question=s[4], note=a.text.strip())
         save(st)
         print(t["blocked"] % (a.text.strip() or "-"))
         return 1
@@ -298,6 +319,7 @@ def main(argv=None):
         rec["forced_gaps"] = missing
         st["blocked"] = False
         st["current"] = cur + 1
+        append_ledger("force" if missing else "pass", cur, question=s[4], answer=ans, gaps=missing)
         save(st)
         if missing:
             print(t["forced"] % (cur, "、".join(missing)))
