@@ -232,6 +232,7 @@ def main(argv=None):
 
     cur = st["current"]
     if a.cmd == "status" or a.cmd == "done":
+        _refresh_panel()
         if a.json:
             print(json.dumps(st, ensure_ascii=False, indent=2))
             return 0 if cur >= len(STAGES) else 1
