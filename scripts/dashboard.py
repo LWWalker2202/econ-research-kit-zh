@@ -1004,15 +1004,19 @@ def main(argv=None):
 
     target = None
     if not a.no_panel:
-        target = os.path.abspath(a.json_out) if a.json_out else panel_path(project)
-        parent = os.path.dirname(target)
-        if parent and not os.path.isdir(parent):
-            os.makedirs(parent)
-        slim = dict(board)
-        slim.pop("labels", None)
-        text = json.dumps(slim, ensure_ascii=False, indent=2)
-        with io.open(target, "w", encoding="utf-8", newline="\n") as f:
-            f.write(text + "\n")
+        if a.json_out:
+            target = os.path.abspath(a.json_out)
+            slim = dict(board)
+            slim.pop("labels", None)
+            slim["generated_at"] = generated_at()
+            parent = os.path.dirname(target)
+            if parent and not os.path.isdir(parent):
+                os.makedirs(parent)
+            with io.open(target, "w", encoding="utf-8", newline="\n") as f:
+                f.write(json.dumps(slim, ensure_ascii=False, indent=2) + "\n")
+        else:
+            # 默认走 write_panel：带 generated_at，并同时写进上层已有的 .econ-kit
+            target = write_panel(root, out_dir, a.lang, project)
         board["panel_path"] = target
 
     if a.json:
