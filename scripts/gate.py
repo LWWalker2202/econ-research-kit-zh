@@ -181,6 +181,9 @@ def status_card(cur):
     print("段   : [%d] %s" % (cur, st[1] if st else "done"))
     print("产物 : " + ("、".join(art) if art else "—"))
     print("停在哪: 等用户回答 `gate.py pass \"<原话>\"`" if st else "八段全部通过")
+    has_spec = os.path.isfile(SPEC_FILE)
+    print("规格   : " + ("已写 .econ-kit/spec.md（改过就算你的）"
+                         if has_spec else "未写——先跑 `python scripts/spec.py \"<你的题目>\"`，把草稿贴给用户改"))
     print("")
 
 def append_ledger(event, stage, question="", answer="", gaps=None, note=""):

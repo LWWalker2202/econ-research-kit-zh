@@ -28,6 +28,7 @@ import io
 import json
 import os
 import re
+import re
 import sys
 
 try:
@@ -438,6 +439,34 @@ def stage_details(root, wf, gate, checks, project):
     return out
 
 
+def parse_spec(project):
+    """读 .econ-kit/spec.md：原话 / 四槽 / 待确认问题 / 提示词草稿。
+
+    这份文件由 scripts/spec.py 生成，格式是固定的几节；这里只认那几节，
+    读不到就返回 {}，让面板显示"还没有规格草稿"。"""
+    p = os.path.join(project, ".econ-kit", "spec.md")
+    text = read_text(p)
+    if not text:
+        return {}
+    out = {"path": p.replace(os.sep, "/"), "quote": "", "slots": [], "questions": [], "prompt": ""}
+    for line in text.splitlines():
+        s = line.strip()
+        if s.startswith("> ") and not out["quote"]:
+            out["quote"] = s[2:].strip()
+        if s.startswith("| ") and s.count("|") >= 4 and "---" not in s:
+            cells = [c.strip() for c in s.strip("|").split("|")]
+            if cells and cells[0] not in ("槽位", "slot", "Slot"):
+                if len(cells) >= 3:
+                    out["slots"].append({"name": cells[0], "state": cells[1], "value": cells[2]})
+        m = re.match(r"^(\d+)\.\s+(.+)$", s)
+        if m and len(out["questions"]) < 3:
+            out["questions"].append(m.group(2).strip())
+    m = re.search(r"```text\n(.*?)```", text, re.S)
+    if m:
+        out["prompt"] = m.group(1).strip()
+    return out
+
+
 def collect(root, out_dir, lang, project=None):
     t = TEXT[lang]
     prog = parse_progress(root)
@@ -462,6 +491,7 @@ def collect(root, out_dir, lang, project=None):
         "events": parse_ladder(out_dir)[1],
         "searches": count_searches(out_dir),
         "labels": t,
+        "spec": parse_spec(project or root),
     }
     done = len([s for s in board["steps"] if s.get("status") == "done"])
     board["build_done"] = done
