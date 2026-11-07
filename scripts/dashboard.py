@@ -342,6 +342,68 @@ def count_searches(out_dir):
     return max(0, len([x for x in text.splitlines() if x.strip()]) - 1)
 
 
+def parse_skill_flow(root, skill):
+    """从该工序的 SKILL.md 里抓最多 6 条做法，给面板点开后的"操作流程"。"""
+    if not skill:
+        return []
+    text = read_text(os.path.join(root, "skills", skill, "SKILL.md"))
+    if not text:
+        return []
+    want = ("步骤", "流程", "怎么做", "procedure", "process", "steps", "workflow", "how to")
+    out, inside = [], False
+    for line in text.splitlines():
+        s = line.strip()
+        if s.startswith("#"):
+            head = s.lstrip("#").strip().lower()
+            inside = any(head.startswith(w) for w in want)
+            continue
+        if not inside or not s:
+            continue
+        if s.startswith(("- ", "* ")) or (s[0].isdigit() and s.split(".")[0].isdigit()):
+            item = re.sub(r"^([-*]\s+|\d+[.)]\s*)", "", s).strip()
+            item = re.sub(r"\*\*(.+?)\*\*", r"\1", item)
+            item = re.sub(r"`([^`]*)`", r"\1", item)
+            if item:
+                out.append(item[:140])
+        if len(out) >= 6:
+            break
+    return out
+
+
+def stage_details(root, wf, gate, checks, project):
+    """每一段的点开视图：状态 / 闸门问句 / 你的回答 / 该交的文件在不在 / 流程要点 / 检查器。"""
+    by_stage = {}
+    for rec in (gate or {}).get("stages") or []:
+        try:
+            by_stage[int(rec.get("stage"))] = rec
+        except (TypeError, ValueError):
+            continue
+    named = dict((c.get("name"), c) for c in (checks or []))
+    out = []
+    for i, w in enumerate(wf or []):
+        sid = int(w.get("id", i))
+        rec = by_stage.get(sid, {})
+        files = []
+        for rel in (w.get("produces") or []):
+            files.append({"path": rel, "exists": os.path.exists(os.path.join(project, rel))})
+        out.append({
+            "id": sid,
+            "name_zh": w.get("name_zh", ""),
+            "name_en": w.get("name_en", ""),
+            "skill": w.get("skill", ""),
+            "gate_zh": w.get("gate_zh", ""),
+            "gate_en": w.get("gate_en", ""),
+            "status": rec.get("status", "todo"),
+            "answer": rec.get("answer", ""),
+            "answered_at": rec.get("answered_at", ""),
+            "forced_gaps": rec.get("forced_gaps") or [],
+            "files": files,
+            "flow": parse_skill_flow(root, w.get("skill", "")),
+            "check": named.get(w.get("skill", "")),
+        })
+    return out
+
+
 def collect(root, out_dir, lang, project=None):
     t = TEXT[lang]
     prog = parse_progress(root)
@@ -369,6 +431,8 @@ def collect(root, out_dir, lang, project=None):
     done = len([s for s in board["steps"] if s.get("status") == "done"])
     board["build_done"] = done
     board["build_total"] = len(board["steps"])
+    board["stages"] = stage_details(root, board["workflow"], board["gate"],
+                                    board["checks"], board["project"])
     return board
 
 
