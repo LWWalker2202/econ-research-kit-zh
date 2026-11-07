@@ -916,8 +916,26 @@ def write_panel(root, out_dir, lang, project):
     if parent and not os.path.isdir(parent):
         os.makedirs(parent)
     text = json.dumps(slim, ensure_ascii=False, indent=2) + "\n"
-    with io.open(target, "w", encoding="utf-8", newline="\n") as f:
-        f.write(text)
+    targets = [target]
+    # 研究项目常在工作区下面几层；会话的工作区根才是面板真正读的地方，
+    # 所以凡祖先目录里已经有 .econ-kit/ 的，一并写一份（最多上溯 3 层）。
+    here = os.path.dirname(os.path.abspath(project))
+    for _ in range(3):
+        hub = os.path.join(here, ".econ-kit")
+        if os.path.isdir(hub):
+            extra = os.path.join(hub, "dashboard.json")
+            if os.path.abspath(extra) not in [os.path.abspath(t) for t in targets]:
+                targets.append(extra)
+        parent = os.path.dirname(here)
+        if parent == here:
+            break
+        here = parent
+    for t in targets:
+        d = os.path.dirname(t)
+        if d and not os.path.isdir(d):
+            os.makedirs(d)
+        with io.open(t, "w", encoding="utf-8", newline="\n") as f:
+            f.write(text)
     return target
 
 
