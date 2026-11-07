@@ -830,6 +830,48 @@ footer { margin-top:26px; font-size:12px; color:var(--dim); }
 
 
 # --------------------------------------------------------------------------- #
+def generated_at():
+    """面板专用的生成时间（ISO8601，UTC，秒级）。只进面板文件，不进 stdout。"""
+    import datetime
+    return datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
+
+
+def panel_path(project):
+    """看板数据落点：<项目>/.econ-kit/dashboard.json"""
+    return os.path.join(os.path.abspath(project), ".econ-kit", "dashboard.json")
+
+
+def write_panel(root, out_dir, lang, project):
+    """把同一份数据写进项目里，返回落点路径。"""
+    board = collect(root, out_dir, lang, project)
+    slim = dict(board)
+    slim.pop("labels", None)
+    slim["generated_at"] = generated_at()
+    target = panel_path(project)
+    parent = os.path.dirname(target)
+    if parent and not os.path.isdir(parent):
+        os.makedirs(parent)
+    text = json.dumps(slim, ensure_ascii=False, indent=2) + "\n"
+    with io.open(target, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+    return target
+
+
+def write_panel_near(kit_root, project=None, lang="zh"):
+    """给 gate.py / spec.py 用：猜出 out_dir，再写看板数据。
+
+    猜法：项目里有 output/ 就用它，否则用库自带的 output/。
+    任何异常都吞掉——看板数据不该拖垮闸门。
+    """
+    try:
+        proj = os.path.abspath(project or os.getcwd())
+        cand = os.path.join(proj, "output")
+        out_dir = cand if os.path.isdir(cand) else os.path.join(kit_root, "output")
+        return write_panel(kit_root, out_dir, lang, proj)
+    except Exception:
+        return None
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="one page: where you are, what comes next")
     ap.add_argument("--lang", choices=["zh", "en"], default="zh")
@@ -840,7 +882,9 @@ def main(argv=None):
     ap.add_argument("--html", default=None, help="write a single-file dashboard here")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--json-out", default=None,
-                    help="also write the same JSON here (the in-app panel reads this file)")
+                    help="write the JSON here instead of <project>/.econ-kit/dashboard.json")
+    ap.add_argument("--no-panel", action="store_true",
+                    help="do not touch <project>/.econ-kit/dashboard.json")
     a = ap.parse_args(argv)
 
     root = os.path.abspath(a.root)
@@ -853,21 +897,23 @@ def main(argv=None):
     project = os.path.abspath(a.project)
     board = collect(root, out_dir, a.lang, project)
 
-    if a.json or a.json_out:
+    target = None
+    if not a.no_panel:
+        target = os.path.abspath(a.json_out) if a.json_out else panel_path(project)
+        parent = os.path.dirname(target)
+        if parent and not os.path.isdir(parent):
+            os.makedirs(parent)
         slim = dict(board)
         slim.pop("labels", None)
         text = json.dumps(slim, ensure_ascii=False, indent=2)
-        if a.json:
-            print(text)
-        if a.json_out:
-            target = os.path.abspath(a.json_out)
-            parent = os.path.dirname(target)
-            if parent and not os.path.isdir(parent):
-                os.makedirs(parent)
-            with io.open(target, "w", encoding="utf-8", newline="\n") as f:
-                f.write(text + "\n")
-            if not a.json:
-                print("wrote %s (%d bytes)" % (target, os.path.getsize(target)))
+        with io.open(target, "w", encoding="utf-8", newline="\n") as f:
+            f.write(text + "\n")
+        board["panel_path"] = target
+
+    if a.json:
+        slim = dict(board)
+        slim.pop("labels", None)
+        print(json.dumps(slim, ensure_ascii=False, indent=2))
         return 0
 
     if a.html:
@@ -882,6 +928,9 @@ def main(argv=None):
         return 0
 
     print(render_text(board))
+    if target:
+        print("")
+        print("panel data: %s" % target)
     return 0
 
 

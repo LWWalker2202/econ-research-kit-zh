@@ -27,6 +27,48 @@ if hasattr(sys.stdout, "reconfigure"):
 
 STATE_DIR = ".econ-kit"
 STATE_FILE = os.path.join(STATE_DIR, "gate.json")
+SPEC_FILE = os.path.join(STATE_DIR, "spec.md")
+AGENTS_FILE = "AGENTS.md"
+PROTOCOL_FILE = os.path.join(STATE_DIR, "PROTOCOL.md")
+
+PROTOCOL = """
+# 这个目录是一个研究项目
+
+三行契约，任何 AI 助手（DSH / Codex / Claude Code / Cursor）进这个目录都要先读：
+
+1. **开工前先看闸门**：`python <kit>/scripts/gate.py status`。没有 `.econ-kit/gate.json`，
+   先 `gate.py start "<题目>"`；没开闸门不许产出任何研究文件。
+2. **每一步先给规格再动手**：`gate.py` 放行前要求 `.econ-kit/spec.md` 存在，
+   它由 `python <kit>/scripts/spec.py "<原话>"` 生成——那份规格与提示词草稿要先给用户看、改完再开工。
+3. **每段结束要一句人给的回答**：`gate.py pass "<用户的原话>"`；少于八个字不算回答。
+   `--force` 可以跳过，但缺口会记进 `gate.json`，看板上会标出来。
+
+看板数据 `.econ-kit/dashboard.json` 由 `gate.py` / `spec.py` 自动重写，不需要手跑。
+"""
+
+AGENTS_SECTION = """
+<!-- econ-research-kit:begin -->
+## 研究项目契约（econ-research-kit 自动写入）
+
+本目录是一个研究项目。开工前先跑 `python <kit>/scripts/gate.py status`；
+没有闸门状态先 `gate.py start "<题目>"`；放行前必须有 `.econ-kit/spec.md`。
+
+完整契约见 `.econ-kit/PROTOCOL.md`。不要删除本段——删了就等于关掉闸门。
+<!-- econ-research-kit:end -->
+"""
+
+
+
+def _refresh_panel():
+    """状态一变就把看板数据重写一遍（失败不吭声，闸门优先）。"""
+    try:
+        here = os.path.dirname(os.path.abspath(__file__))
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import dashboard
+        dashboard.write_panel_near(os.path.dirname(here))
+    except Exception:
+        pass
 
 STAGES = [
     (0, "可行性", "feasibility", "这题到底做不做得下去",
@@ -75,6 +117,8 @@ T = {
         "ask": "第 %d 段（%s）要问你的：\n\n  %s\n\n答完跑：python scripts/gate.py pass \"<你的回答>\"",
         "passed": "第 %d 段放行。记录：%s",
         "too_short": "这句话太短，不算回答（至少 %d 个字）。真确认一下，别写「好」。",
+        "no_spec": "还没有任务规格 `.econ-kit/spec.md`。先把规格与提示词草稿给用户看：\n    python scripts/spec.py \"<用户的原话>\"\n改完再 pass；确实要跳过，用 --force 并在回答里写清为什么。",
+        "need_spec": "下一步：先把规格与提示词草稿给用户看（spec.py），不是直接开工。",
         "missing_art": "第 %d 段还缺产物：%s\n补齐再 pass；确实要先跳过，用 gate.py pass \"<回答>\" --force 并在这里写清为什么。",
         "forced": "第 %d 段带缺口放行（产物缺：%s）。这条会记在案上。",
         "blocked": "已标记暂停。原因：%s",
@@ -92,6 +136,8 @@ T = {
         "ask": "Stage %d (%s) asks you:\n\n  %s\n\nAfter answering: python scripts/gate.py pass \"<your answer>\"",
         "passed": "Stage %d passed. Recorded: %s",
         "too_short": "That is too short to count as an answer (min %d characters). Confirm for real.",
+        "no_spec": "No task spec yet (`.econ-kit/spec.md`). Show the spec and prompt draft to the user first:\n    python scripts/spec.py \"<the user's words>\"\nThen pass; if you really must skip, use --force and write down why.",
+        "need_spec": "Next: show the spec and prompt draft to the user (spec.py), do not start producing yet.",
         "missing_art": "Stage %d is missing artifacts: %s\nProduce them, or use --force and write down why you skipped.",
         "forced": "Stage %d passed with gaps (%s). This is on the record.",
         "blocked": "Marked as blocked. Reason: %s",
@@ -108,11 +154,38 @@ def load():
         return json.load(f)
 
 
+def write_protocol():
+    """把契约落到项目里：.econ-kit/PROTOCOL.md，并在 AGENTS.md 里留一个指针段。"""
+    if not os.path.isdir(STATE_DIR):
+        os.makedirs(STATE_DIR)
+    with io.open(PROTOCOL_FILE, "w", encoding="utf-8", newline="\n") as f:
+        f.write(PROTOCOL)
+    marker = "<!-- econ-research-kit:begin -->"
+    body = ""
+    if os.path.exists(AGENTS_FILE):
+        with io.open(AGENTS_FILE, encoding="utf-8") as f:
+            body = f.read()
+    if marker not in body:
+        with io.open(AGENTS_FILE, "a", encoding="utf-8", newline="\n") as f:
+            f.write(AGENTS_SECTION)
+
+
+def status_card(cur):
+    """三行状态卡：现在哪一段 / 该产什么 / 停在哪。"""
+    st = STAGES[cur] if cur < len(STAGES) else None
+    art = ARTIFACTS.get(cur, [])
+    print("")
+    print("段   : [%d] %s" % (cur, st[1] if st else "done"))
+    print("产物 : " + ("、".join(art) if art else "—"))
+    print("停在哪: 等用户回答 `gate.py pass \"<原话>\"`" if st else "八段全部通过")
+    print("")
+
 def save(st):
     if not os.path.isdir(STATE_DIR):
         os.makedirs(STATE_DIR)
     with io.open(STATE_FILE, "w", encoding="utf-8", newline="\n") as f:
         json.dump(st, f, ensure_ascii=False, indent=2)
+    _refresh_panel()
 
 
 def stage_row(i):
@@ -138,7 +211,10 @@ def main(argv=None):
               "stages": [{"stage": s[0], "name": s[1], "skill": s[2], "status": "open",
                           "answer": "", "answered_at": "", "forced_gaps": []} for s in STAGES]}
         save(st)
+        write_protocol()
         print(t["started"] % (st["question"], 0, STAGES[0][1]))
+        print(t["need_spec"])
+        status_card(0)
         return 1
 
     if a.cmd == "reset":
@@ -205,6 +281,12 @@ def main(argv=None):
             print(t["too_short"] % MIN_ANSWER)
             return 1
         missing = [p for p in ARTIFACTS.get(cur, []) if not os.path.exists(p)]
+        if not os.path.exists(SPEC_FILE):
+            if not a.force:
+                print(t["no_spec"])
+                status_card(cur)
+                return 1
+            missing = missing + ["spec.md（没有规格草稿）"]
         if missing and not a.force:
             print(t["missing_art"] % (cur, "、".join(missing)))
             return 1

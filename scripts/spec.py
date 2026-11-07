@@ -308,6 +308,7 @@ def main(argv=None):
     ap.add_argument("question", nargs="?", default="", help="你的需求，一句话")
     ap.add_argument("--lang", choices=["zh", "en"], default="zh")
     ap.add_argument("--out", default="", help="写到这个文件（默认打印到屏幕）")
+    ap.add_argument("--no-write", action="store_true", help="不写 .econ-kit/spec.md")
     ap.add_argument("--json", action="store_true", help="输出结构化 JSON，方便别的脚本接")
     a = ap.parse_args(argv)
 
@@ -345,6 +346,27 @@ def main(argv=None):
         print(("已写出：%s" if a.lang == "zh" else "wrote: ") % a.out)
     else:
         print(body)
+
+    if not a.no_write:
+        state_dir = ".econ-kit"
+        if not os.path.isdir(state_dir):
+            os.makedirs(state_dir)
+        target = os.path.join(state_dir, "spec.md")
+        with io.open(target, "w", encoding="utf-8", newline="\n") as f:
+            f.write(body + "\n")
+        print("")
+        print(("规格草稿已落盘：%s" if a.lang == "zh" else "spec written: ") % target)
+        print("下一步：把这份草稿给用户改；改完再 gate.py pass \"<用户的原话>\"" if a.lang == "zh"
+              else "Next: let the user edit it, then gate.py pass \"<the user's words>\"")
+    print("")
+    try:
+        here = os.path.dirname(os.path.abspath(__file__))
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import dashboard
+        dashboard.write_panel_near(os.path.dirname(here), lang=a.lang)
+    except Exception:
+        pass
     return 0 if not todo else 1
 
 
