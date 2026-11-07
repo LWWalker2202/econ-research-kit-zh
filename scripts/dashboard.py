@@ -430,6 +430,8 @@ def stage_details(root, wf, gate, checks, project):
             "forced_gaps": rec.get("forced_gaps") or [],
             "files": files,
             "flow": parse_skill_flow(root, w.get("skill", "")),
+            "beyond_zh": list(w.get("beyond_zh") or []),
+            "beyond_en": list(w.get("beyond_en") or []),
             "check": named.get(w.get("skill", "")),
             "log": [e for e in ledger if str(e.get("stage")) == str(sid)][-4:],
         })

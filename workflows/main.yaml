@@ -30,6 +30,14 @@ stages:
     gate_en: With this unit and this treatment, can the data actually be obtained? What breaks first?
     on_missing: stop
 
+    beyond_zh:
+      - 用二手行政数据时：多一张变量口径对照表（同一指标不同年份的定义变过）
+      - 跨多个数据源时：多一步合并键与覆盖度核对
+      - 涉及问卷或实验时：多一份预注册与伦理审查
+    beyond_en:
+      - "With administrative data: add a definition crosswalk (the same indicator changes definition across years)"
+      - "With several sources: add a merge-key and coverage check"
+      - "With a survey or an experiment: add pre-registration and ethics review"
   - id: 1
     name_zh: 问题与文献
     name_en: Question and literature
@@ -43,6 +51,12 @@ stages:
     gate_en: Do you accept this gap statement? What is your one-line answer if a referee says it has been done?
     on_missing: stop
 
+    beyond_zh:
+      - 中文题目：多做一轮中文文献补检（Crossref 中文元数据弱，要换关键词）
+      - 已有目标期刊：多一步读该刊近三年同题文章的缺口口径
+    beyond_en:
+      - "Chinese topic: add a second search pass (Chinese metadata on Crossref is thin, so change the keywords)"
+      - "Target journal chosen: read how that journal framed the gap in the last three years"
   - id: 2
     name_zh: 识别设计
     name_en: Identification
@@ -56,6 +70,14 @@ stages:
     gate_en: Which of these threats can you not test now? Are you carrying it deliberately?
     on_missing: stop
 
+    beyond_zh:
+      - 多期 DID：多一张处理时点表，并检查负权重
+      - IV：多一份一阶段强度表与排他性论证
+      - RDD：多一份带宽敏感性与操纵检验
+    beyond_en:
+      - "Staggered DID: add a treatment-timing table and check negative weights"
+      - "IV: add a first-stage strength table and an exclusion argument"
+      - "RDD: add bandwidth sensitivity and a manipulation test"
   - id: 3
     name_zh: 数据
     name_en: Data
@@ -69,6 +91,14 @@ stages:
     gate_en: Do you accept these cleaning actions and variable definitions? Which one changes?
     on_missing: stop
 
+    beyond_zh:
+      - 多源合并：多一份合并日志（哪一步丢了多少行）
+      - 有缺测：多一张缺失机制说明（MCAR/MAR/MNAR）
+      - 有抽样权重：多一份权重与代表性核对
+    beyond_en:
+      - "Several sources merged: add a merge log (how many rows each step dropped)"
+      - "Missing values: add a missingness note (MCAR/MAR/MNAR)"
+      - "Sampling weights: add a weight and representativeness check"
   - id: 4
     name_zh: 估计
     name_en: Estimation
@@ -82,6 +112,14 @@ stages:
     gate_en: Is this the rung you will report? What happens to the rung where significance changes?
     on_missing: stop
 
+    beyond_zh:
+      - 主结果不稳：多做设定阶梯（--ladder），并说明报告哪一级
+      - 聚类层级有争议：多一份多层级聚类对照
+      - 结果变量不止一个：多一份多重检验校正
+    beyond_en:
+      - "Fragile main result: run the specification ladder (--ladder) and say which rung you report"
+      - "Clustering level disputed: add a multi-level clustering comparison"
+      - "Several outcomes: add a multiple-testing correction"
   - id: 5
     name_zh: 表与图
     name_en: Tables and figures
@@ -94,6 +132,12 @@ stages:
     gate_en: Do the stars, standard-error level and notes match your target journal?
     on_missing: stop
 
+    beyond_zh:
+      - 投中文刊：套 journal-cn 规范（表题位置、横线数、小数位、标点）
+      - 有异质性结果：多一张分组表与交互项
+    beyond_en:
+      - "Chinese journal: follow the journal-cn overrides (caption position, rules, decimals, punctuation)"
+      - "Heterogeneity: add a subgroup table and the interaction term"
   - id: 6
     name_zh: 报告
     name_en: Report
@@ -107,6 +151,12 @@ stages:
     gate_en: Does the "still missing" paragraph say what you actually think is missing?
     on_missing: stop
 
+    beyond_zh:
+      - 要复现：多一份复现说明（数据版本、随机种子、运行时间）
+      - 数据保密：多一份可得性声明与申请流程
+    beyond_en:
+      - "Reproducibility required: add a reproduction note (data version, seed, runtime)"
+      - "Restricted data: add an availability statement and the access route"
   - id: 7
     name_zh: 写作
     name_en: Writing
@@ -119,6 +169,12 @@ stages:
     gate_en: Is the identification sentence in the abstract something you will sign your name to?
     on_missing: stop
 
+    beyond_zh:
+      - 投英文刊：多一轮语言与文献风格对齐
+      - 投中文刊：多一轮按刊改摘要与关键词
+    beyond_en:
+      - "English journal: add a language and citation-style pass"
+      - "Chinese journal: rewrite the abstract and keywords for that journal"
   - id: 8
     name_zh: 审稿回复
     name_en: Referee response
@@ -140,3 +196,9 @@ notes_en: |
   Two rules.
   First, requires is not a suggestion: without the upstream file you may not enter the stage; the only allowed move is to go back upstream, never to invent it in place.
   Second, the files under produces are the only proof the stage happened; chat history and verbal conclusions do not count.
+    beyond_zh:
+      - 意见有分歧：多一份「不同意但已处理」的逐条说明
+      - 要求补分析：多一份补充结果附录与新增表
+    beyond_en:
+      - "A comment you disagree with: add a line-by-line note on what you did instead"
+      - "New analysis requested: add a supplementary appendix with the new tables"

@@ -176,6 +176,108 @@ L = dict(
 )
 
 
+BEYOND = {
+    0: {
+        "zh": [
+            '用二手行政数据时：多一张变量口径对照表（同一指标不同年份的定义变过）',
+            '跨多个数据源时：多一步合并键与覆盖度核对',
+            '涉及问卷或实验时：多一份预注册与伦理审查',
+        ],
+        "en": [
+            'With administrative data: add a definition crosswalk (the same indicator changes definition across years)',
+            'With several sources: add a merge-key and coverage check',
+            'With a survey or an experiment: add pre-registration and ethics review',
+        ],
+    },
+    1: {
+        "zh": [
+            '中文题目：多做一轮中文文献补检（Crossref 中文元数据弱，要换关键词）',
+            '已有目标期刊：多一步读该刊近三年同题文章的缺口口径',
+        ],
+        "en": [
+            'Chinese topic: add a second search pass (Chinese metadata on Crossref is thin, so change the keywords)',
+            'Target journal chosen: read how that journal framed the gap in the last three years',
+        ],
+    },
+    2: {
+        "zh": [
+            '多期 DID：多一张处理时点表，并检查负权重',
+            'IV：多一份一阶段强度表与排他性论证',
+            'RDD：多一份带宽敏感性与操纵检验',
+        ],
+        "en": [
+            'Staggered DID: add a treatment-timing table and check negative weights',
+            'IV: add a first-stage strength table and an exclusion argument',
+            'RDD: add bandwidth sensitivity and a manipulation test',
+        ],
+    },
+    3: {
+        "zh": [
+            '多源合并：多一份合并日志（哪一步丢了多少行）',
+            '有缺测：多一张缺失机制说明（MCAR/MAR/MNAR）',
+            '有抽样权重：多一份权重与代表性核对',
+        ],
+        "en": [
+            'Several sources merged: add a merge log (how many rows each step dropped)',
+            'Missing values: add a missingness note (MCAR/MAR/MNAR)',
+            'Sampling weights: add a weight and representativeness check',
+        ],
+    },
+    4: {
+        "zh": [
+            '主结果不稳：多做设定阶梯（--ladder），并说明报告哪一级',
+            '聚类层级有争议：多一份多层级聚类对照',
+            '结果变量不止一个：多一份多重检验校正',
+        ],
+        "en": [
+            'Fragile main result: run the specification ladder (--ladder) and say which rung you report',
+            'Clustering level disputed: add a multi-level clustering comparison',
+            'Several outcomes: add a multiple-testing correction',
+        ],
+    },
+    5: {
+        "zh": [
+            '投中文刊：套 journal-cn 规范（表题位置、横线数、小数位、标点）',
+            '有异质性结果：多一张分组表与交互项',
+        ],
+        "en": [
+            'Chinese journal: follow the journal-cn overrides (caption position, rules, decimals, punctuation)',
+            'Heterogeneity: add a subgroup table and the interaction term',
+        ],
+    },
+    6: {
+        "zh": [
+            '要复现：多一份复现说明（数据版本、随机种子、运行时间）',
+            '数据保密：多一份可得性声明与申请流程',
+        ],
+        "en": [
+            'Reproducibility required: add a reproduction note (data version, seed, runtime)',
+            'Restricted data: add an availability statement and the access route',
+        ],
+    },
+    7: {
+        "zh": [
+            '投英文刊：多一轮语言与文献风格对齐',
+            '投中文刊：多一轮按刊改摘要与关键词',
+        ],
+        "en": [
+            'English journal: add a language and citation-style pass',
+            'Chinese journal: rewrite the abstract and keywords for that journal',
+        ],
+    },
+    8: {
+        "zh": [
+            '意见有分歧：多一份「不同意但已处理」的逐条说明',
+            '要求补分析：多一份补充结果附录与新增表',
+        ],
+        "en": [
+            'A comment you disagree with: add a line-by-line note on what you did instead',
+            'New analysis requested: add a supplementary appendix with the new tables',
+        ],
+    },
+}
+
+
 def render(stage, lang):
     t = L[lang]
     d = stage[lang]
@@ -186,6 +288,12 @@ def render(stage, lang):
         t["stop"],
         t["ask"].format(ask=d["ask"]),
     ]
+    beyond = BEYOND.get(stage["num"], {}).get(lang) or []
+    if beyond:
+        lines.append("")
+        lines.append("＋ 按题目可能要加的（做了就记在账本 note 里，不做不算缺）")
+        for item in beyond:
+            lines.append("  · " + item)
     return "\n".join(lines)
 
 

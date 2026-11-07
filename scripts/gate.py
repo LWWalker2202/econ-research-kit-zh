@@ -104,7 +104,7 @@ ARTIFACTS = {
     8: ["response-letter.md"],
 }
 
-CONSTRAINTS = '## 六条约束（拒绝时会回编号）\n\n- **C1 规格先行**：放行前必须有 `.econ-kit/spec.md`。\n- **C2 产物齐备**：该段要交的文件必须真的存在。\n- **C3 回答有效**：少于八个字的回答不算回答。\n- **C4 跳过留痕**：`--force` 可以越过 C1/C2，但缺口写进 gate.json 并在看板标红。\n- **C5 状态可复原**：任何时候 `gate.py status` 都说清停在哪一段。\n- **C6 账本可追**：每次状态变化都往 `.econ-kit/ledger.jsonl` 追加一行，不改历史。\n\n## Constraints (cited when refusing)\n\n- **C1 spec first** - a task spec must exist before anything advances.\n- **C2 artifacts present** - the files promised by the stage must exist.\n- **C3 real answer** - fewer than eight characters is not an answer.\n- **C4 forced moves are recorded** - `--force` passes but the gaps are written down.\n- **C5 state is restorable** - `gate.py status` always says where you are.\n- **C6 the ledger is append-only** - every transition appends one JSON line.\n'
+CONSTRAINTS = '## 七条约束（拒绝时会回编号）\n\n- **C1 规格先行**：放行前必须有 `.econ-kit/spec.md`。\n- **C2 产物齐备**：该段要交的文件必须真的存在。\n- **C3 回答有效**：少于八个字的回答不算回答。\n- **C4 跳过留痕**：`--force` 可以越过 C1/C2，但缺口写进 gate.json 并在看板标红。\n- **C5 状态可复原**：任何时候 `gate.py status` 都说清停在哪一段。\n- **C6 账本可追**：每次状态变化都往 `.econ-kit/ledger.jsonl` 追加一行，不改历史。\n- **C7 下限不封顶**：这里列的是「至少要做」的，不是「只能做」的；题目需要更多就多做，并把多做的记进账本 note（`gate.py pass --extra` 后面跟一句说明）。不做不算缺，做了不白做。\n\n## Constraints (cited when refusing)\n\n- **C1 spec first** - a task spec must exist before anything advances.\n- **C2 artifacts present** - the files promised by the stage must exist.\n- **C3 real answer** - fewer than eight characters is not an answer.\n- **C4 forced moves are recorded** - `--force` passes but the gaps are written down.\n- **C5 state is restorable** - `gate.py status` always says where you are.\n- **C6 the ledger is append-only** - every transition appends one JSON line.\n- **C7 a floor, not a ceiling** - the stage lists the minimum. Do more when the task needs it and record it with `gate.py pass --extra`; extra work is never counted as a gap.\n'
 
 MIN_ANSWER = 8  # 少于 8 个字符的回答不算回答（"好""行""嗯"不是确认）
 
@@ -217,6 +217,7 @@ def main(argv=None):
     ap.add_argument("text", nargs="?", default="")
     ap.add_argument("--lang", choices=["zh", "en"], default="zh")
     ap.add_argument("--force", action="store_true", help="产物缺也放行（会记录在案）")
+    ap.add_argument("--extra", default="", help="下限之外多做的那部分，记进账本 note")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
     t = T["zh" if a.lang == "zh" else "en"]
@@ -319,7 +320,9 @@ def main(argv=None):
         rec["forced_gaps"] = missing
         st["blocked"] = False
         st["current"] = cur + 1
-        append_ledger("force" if missing else "pass", cur, question=s[4], answer=ans, gaps=missing)
+        extra = (getattr(a, "extra", "") or "").strip()
+        append_ledger("force" if missing else "pass", cur, question=s[4], answer=ans,
+                      gaps=missing, note=("extra: " + extra) if extra else "")
         save(st)
         if missing:
             print(t["forced"] % (cur, "、".join(missing)))

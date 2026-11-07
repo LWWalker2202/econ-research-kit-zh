@@ -39,6 +39,8 @@ description: 经济学实证研究的动作库——把一次研究拆成八道�
 
 **动手之前先开闸门**：`python scripts/gate.py status`。没有状态就先 `gate.py start "<题目>"`。`gate.py pass` 在 `.econ-kit/spec.md` 不存在时会直接拒绝，而那份文件由 `scripts/spec.py` 生成——就是先给用户看、改完再开工的规格与提示词草稿。`gate.py start` 还会把 `AGENTS.md` 与 `.econ-kit/PROTOCOL.md` 写进项目，后面任何 agent 都能读到这份契约。表里的"第一步动作"都是在四槽齐了之后才做的；四槽没齐，只有一件事可以做——把缺的那几个问清楚。
 
+每段列的是**下限**，不是上限：题目需要更多就多做，把多做的用 `gate.py pass --extra "..."` 记进账本；不做不算缺，做了也不白做（`C7`）。
+
 | 用户的话大概长这样 | 进入 | 第一步动作 |
 |---|---|---|
 | "我想研究 X，这东西能做吗""有没有数据""this is probably infeasible" | `skills/feasibility/` | 先清点数据与变异，一行代码都别写 |
