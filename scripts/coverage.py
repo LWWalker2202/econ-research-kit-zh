@@ -125,7 +125,7 @@ def check_project(project):
     tf = os.path.join(p, STATE, "to-fill.csv")
     tf_rows = max(0, len(read(tf).splitlines()) - 1) if os.path.isfile(tf) else 0
     out.append(("tofill", tf_rows > 0, ("%d" % tf_rows) if tf_rows else "-"))
-\n    panel = os.path.join(p, STATE, "dashboard.json")
+    panel = os.path.join(p, STATE, "dashboard.json")
     fresh = False
     if os.path.isfile(panel):
         fresh = (time.time() - os.path.getmtime(panel)) < 86400
